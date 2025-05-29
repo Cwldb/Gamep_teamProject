@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="0.Core">
+      <UniqueIdentifier>{756223b2-3681-4773-8272-28528c51ba49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Manager">
+      <UniqueIdentifier>{f9fced28-1745-4dcd-8a17-39c3174fd75c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Object">
+      <UniqueIdentifier>{7f6e4509-4117-4e45-be5a-e3780a959a14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Scene">
+      <UniqueIdentifier>{bf2a730d-a268-443b-8977-74befb5c6791}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Resource">
+      <UniqueIdentifier>{90bda16e-831b-43ef-b621-12f7f0c0e72d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Module">
+      <UniqueIdentifier>{133f8db3-144d-4d44-a052-fb315e2ba5ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Component">
+      <UniqueIdentifier>{f1ff89a5-3402-467d-bfc9-c169e6d9569f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Headers">
+      <UniqueIdentifier>{55f7bb3e-ca7d-4ab1-81cb-9791cf3c4adc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>0.Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
