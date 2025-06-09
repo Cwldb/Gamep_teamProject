@@ -7,7 +7,7 @@ enum class Menu
 
 enum class Key
 {
-	LEFT, RIGHT, ENTER, ESC
+	LEFT, RIGHT, SPACE, ESC, FAIL
 };
 
 enum class Scene
