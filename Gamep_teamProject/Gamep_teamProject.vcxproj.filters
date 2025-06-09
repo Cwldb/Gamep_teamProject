@@ -34,5 +34,28 @@
     <ClCompile Include="main.cpp">
       <Filter>0.Core</Filter>
     </ClCompile>
+    <ClCompile Include="Mci.cpp">
+      <Filter>07.Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>07.Module</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleScene.cpp">
+      <Filter>04.Scene</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Enums.h">
+      <Filter>99.Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Mci.h">
+      <Filter>07.Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>07.Module</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScene.h">
+      <Filter>04.Scene</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
