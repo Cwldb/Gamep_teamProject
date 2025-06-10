@@ -39,3 +39,5 @@ void Update();
 
 void Render();
 void GameScene(Scene& _eCurScene);
+void InfoScene(Scene& _eCurScene);
+void RenderInfo();

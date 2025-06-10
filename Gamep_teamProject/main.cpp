@@ -13,6 +13,10 @@ int main()
 			break;
 		case Scene::GAME:
 			GameScene(curScene);
+			break;
+		case Scene::INFO:
+			InfoScene(curScene);
+			break;
 		}
 	}
 }
