@@ -25,7 +25,6 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 
 		}
 	}
-	// -> 는 주소 역참조 _pPlayer의 주소를 아니까 -> 를 사용해서 역참조
 	_pPlayer->position.tPos = _pPlayer->position.tStartPos;
 	_pPlayer->state = { 0 };
 }
@@ -73,14 +72,19 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	{
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
-			if (_gameMap[i][j] == (char)Tile::BACK)
-				cout << "  ";
-			else if (_gameMap[i][j] == (char)Tile::WALL)
-				cout << "■";
-			else if (_gameMap[i][j] == (char)Tile::START)
-				cout << "☆";
-			else if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
-				cout << "♨";
+			if (_pPlayer->position.tPos.x == j && _pPlayer->position.tPos.y == i)
+				cout << "§";
+			else
+			{
+				if (_gameMap[i][j] == (char)Tile::BACK)
+					cout << "  ";
+				else if (_gameMap[i][j] == (char)Tile::WALL)
+					cout << "■";
+				else if (_gameMap[i][j] == (char)Tile::START)
+					cout << "  ";
+				else if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
+					cout << "♨";
+			}
 		}
 		cout << endl;
 	}
