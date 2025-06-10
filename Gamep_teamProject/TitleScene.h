@@ -5,3 +5,4 @@
 void TitleScene(Scene& _eCurScene);
 void TitleSceneUpdate(Scene& _eCurScene);
 void TitleSceneRender();
+Menu GetCurMenu();
