@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="KeyController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mci.cpp" />
@@ -131,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="Console.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="GameLogic.h" />
     <ClInclude Include="KeyController.h" />
     <ClInclude Include="Mci.h" />
   </ItemGroup>
