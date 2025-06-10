@@ -14,3 +14,8 @@ enum class Scene
 {
 	TITLE, GAME, INFO, QUIT, END
 };
+
+enum class Tile
+{
+	BACK = '0', WALL, START, SPAWNDDONG
+};

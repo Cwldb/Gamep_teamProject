@@ -20,6 +20,7 @@ void TitleSceneUpdate(Scene& _eCurScene)
 	{
 	case Menu::START:
 		_eCurScene = Scene::GAME;
+		system("cls");
 		break;
 	case Menu::INFO:
 		_eCurScene = Scene::INFO;

@@ -1,8 +1,8 @@
 #pragma once
 #include "Enums.h"
 
-const int MAP_HEIGHT = 20;
-const int MAP_WIDTH = 21;
+const int MAP_HEIGHT = 24;
+const int MAP_WIDTH = 22;
 
 typedef struct _pos
 {
@@ -18,13 +18,14 @@ typedef struct _pos
 
 typedef struct _playerstate
 {
-    int coinCnt; // 코인 개수
+    int coinCnt;
 }PLAYERSTATE, * PPLAYERSTATE;
 
 typedef struct _playerpos
 {
     POS tPos;
     POS tNewPos;
+    POS tStartPos;
 }PLAYERPOS, * PPLAYERPOS;
 
 typedef struct _player
@@ -33,11 +34,15 @@ typedef struct _player
     PLAYERSTATE state;
 }PLAYER, * PPLAYER;
 
-void Init();
+void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
 
-void Update();
+void Update(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
 
-void Render();
-void GameScene(Scene& _eCurScene);
+void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
+void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH]);
+void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
 void InfoScene(Scene& _eCurScene);
 void RenderInfo();
+
+void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
+void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
