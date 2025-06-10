@@ -3,7 +3,10 @@
 
 int main()
 {
+	char gameMap[MAP_HEIGHT][MAP_WIDTH] = {};
 	Scene curScene = Scene::TITLE;
+	Init(gameMap);
+
 	while (curScene != Scene::QUIT)
 	{
 		switch (curScene)
@@ -12,7 +15,7 @@ int main()
 			TitleScene(curScene);
 			break;
 		case Scene::GAME:
-			GameScene(curScene);
+			GameScene(curScene, gameMap);
 			break;
 		case Scene::INFO:
 			InfoScene(curScene);
