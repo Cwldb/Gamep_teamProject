@@ -11,6 +11,14 @@ Key KeyController()
 	{
 		return Key::RIGHT;
 	}
+	if (GetAsyncKeyState(VK_UP) & 0x8000)
+	{
+		return Key::UP;
+	}
+	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+	{
+		return Key::DOWN;
+	}
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
 		return Key::SPACE;
