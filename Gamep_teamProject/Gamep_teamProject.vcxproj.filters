@@ -40,8 +40,8 @@
     <ClCompile Include="Console.cpp">
       <Filter>07.Module</Filter>
     </ClCompile>
-    <ClCompile Include="TitleScene.cpp">
-      <Filter>04.Scene</Filter>
+    <ClCompile Include="KeyController.cpp">
+      <Filter>07.Module</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -54,8 +54,8 @@
     <ClInclude Include="Console.h">
       <Filter>07.Module</Filter>
     </ClInclude>
-    <ClInclude Include="TitleScene.h">
-      <Filter>04.Scene</Filter>
+    <ClInclude Include="KeyController.h">
+      <Filter>07.Module</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
