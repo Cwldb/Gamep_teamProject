@@ -64,10 +64,10 @@ void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 		_pPlayer->position.tPos = _pPlayer->position.tNewPos;
 }
 
-void Update(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG)
+void Update(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG, Scene& _eCurScene)
 {
 	HandleInput(_gameMap, _pPlayer);
-	SpawnDDong(_gameMap, vecDDONG);
+	SpawnDDong(_gameMap, vecDDONG, _pPlayer, _eCurScene);
 }
 
 
@@ -148,14 +148,21 @@ void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH])
 void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG)
 {
 	_eCurScene = Scene::GAME;
-	Update(_gameMap, _pPlayer, vecDDONG);
+	Update(_gameMap, _pPlayer, vecDDONG, _eCurScene);
 	Gotoxy(0, 0);
 	Render(_gameMap, _pPlayer);
 	FrameSync(30);
 }
 
-void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG)
+void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, PPLAYER _pPlayer, Scene& _eCurScene)
 {
+	if (_gameMap[_pPlayer->position.tPos.y][_pPlayer->position.tPos.x] == (char)Tile::DDONG)
+	{
+		system("cls");
+		_eCurScene = Scene::TITLE;
+		return;
+	}
+
     g_ddongFrame++;
     if (g_ddongFrame < DDONG_DROP_INTERVAL)
         return;
@@ -170,6 +177,10 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG)
                 if (_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START)
                 {
                     _gameMap[i + 1][j] = (char)Tile::DDONG;
+                    _gameMap[i][j] = (char)Tile::BACK;
+                }
+                else if (_gameMap[i + 1][j] == (char)Tile::FLOOR)
+                {
                     _gameMap[i][j] = (char)Tile::BACK;
                 }
             }
