@@ -3,6 +3,10 @@
 #include "Console.h"
 #include "KeyController.h"
 #include <algorithm>
+#include <random>
+
+const int DDONG_DROP_INTERVAL = 10;
+int g_ddongFrame = 0;
 
 void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 {
@@ -11,15 +15,6 @@ void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	SetCursorVisual(false, 50);
 	LoadStage(_gameMap);
 	PlayerInit(_gameMap, _pPlayer);
-}
-
-
-void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG> vecDDONG)
-{
-	for (int i = 0; i < MAP_HEIGHT; ++i)
-	{
-		
-	}
 }
 
 void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
@@ -157,6 +152,65 @@ void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER 
 	Gotoxy(0, 0);
 	Render(_gameMap, _pPlayer);
 	FrameSync(30);
+}
+
+void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG)
+{
+    g_ddongFrame++;
+    if (g_ddongFrame < DDONG_DROP_INTERVAL)
+        return;
+    g_ddongFrame = 0;
+
+    for (int i = MAP_HEIGHT - 2; i >= 0; --i)
+    {
+        for (int j = 0; j < MAP_WIDTH; ++j)
+        {
+            if (_gameMap[i][j] == (char)Tile::DDONG)
+            {
+                if (_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START)
+                {
+                    _gameMap[i + 1][j] = (char)Tile::DDONG;
+                    _gameMap[i][j] = (char)Tile::BACK;
+                }
+            }
+        }
+    }
+
+    std::vector<int> spawnCols;
+    for (int j = 0; j < MAP_WIDTH; ++j)
+    {
+        for (int i = 0; i < MAP_HEIGHT - 1; ++i)
+        {
+            if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
+            {
+                if (_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START)
+                {
+                    spawnCols.push_back(j);
+                }
+            }
+        }
+    }
+
+    if (!spawnCols.empty())
+    {
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, spawnCols.size() - 1);
+        int randIdx = dis(gen);
+        int spawnX = spawnCols[randIdx];
+
+        for (int i = 0; i < MAP_HEIGHT - 1; ++i)
+        {
+            if (_gameMap[i][spawnX] == (char)Tile::SPAWNDDONG)
+            {
+                if (_gameMap[i + 1][spawnX] == (char)Tile::BACK || _gameMap[i + 1][spawnX] == (char)Tile::START)
+                {
+                    _gameMap[i + 1][spawnX] = (char)Tile::DDONG;
+                    break;
+                }
+            }
+        }
+    }
 }
 
 void InfoScene(Scene& _eCurScene)
