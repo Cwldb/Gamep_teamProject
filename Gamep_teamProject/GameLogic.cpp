@@ -40,7 +40,6 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 
 void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 {
-	bool isMoving = false;
 	_pPlayer->position.tNewPos = _pPlayer->position.tPos;
 	Key eKey = KeyController();
 
@@ -103,11 +102,25 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 		}
 		cout << endl;
 	}
+	RenderUI(_pPlayer);
 }
 
-void RenderUI()
+void RenderUI(PPLAYER _pPlayer)
 {
+	COORD consoleSize = GetConsoleResolution();
+	int x = consoleSize.X / 2;
+	int y = 5;
 
+	Gotoxy(x, y++);
+	cout << "--------------------";
+	Gotoxy(x, y++);
+	Gotoxy(x, y++);
+	cout << "  현재 골드 : " << _pPlayer->state.coinCnt;
+	Gotoxy(x, y++);
+	cout << "  남은 시간 : " << 60 << "초";
+	Gotoxy(x, y++);
+	Gotoxy(x, y++);
+	cout << "--------------------";
 }
 
 void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH])

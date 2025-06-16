@@ -49,7 +49,7 @@ Menu GetCurMenu()
 			cout << " ";
 			Gotoxy(x + 12, --y);
 			cout << ">";
-			Sleep(100);
+			Sleep(40);
 		}
 		break;
 	case Key::DOWN:
@@ -59,7 +59,7 @@ Menu GetCurMenu()
 			cout << " ";
 			Gotoxy(x + 12, ++y);
 			cout << ">";
-			Sleep(100);
+			Sleep(40);
 		}
 		break;
 

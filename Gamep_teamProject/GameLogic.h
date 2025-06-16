@@ -48,6 +48,7 @@ void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
 void Update(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG);
 
 void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
+void RenderUI(PPLAYER _pPlayer);
 void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH]);
 void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG);
 void InfoScene(Scene& _eCurScene);
