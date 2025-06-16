@@ -25,7 +25,7 @@ Key KeyController()
 	}
 	if (GetAsyncKeyState(VK_ESCAPE) && 0x8000)
 	{
-		Sleep(60);
+		Sleep(40);
 		return Key::ESC;
 	}
 
