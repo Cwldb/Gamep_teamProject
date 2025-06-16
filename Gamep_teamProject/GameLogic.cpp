@@ -13,6 +13,15 @@ void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	PlayerInit(_gameMap, _pPlayer);
 }
 
+
+void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG> vecDDONG)
+{
+	for (int i = 0; i < MAP_HEIGHT; ++i)
+	{
+		
+	}
+}
+
 void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 {
 	for (int i = 0; i < MAP_HEIGHT; ++i)
@@ -60,9 +69,10 @@ void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 		_pPlayer->position.tPos = _pPlayer->position.tNewPos;
 }
 
-void Update(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
+void Update(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG)
 {
 	HandleInput(_gameMap, _pPlayer);
+	SpawnDDong(_gameMap, vecDDONG);
 }
 
 
@@ -84,6 +94,10 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 					cout << "  ";
 				else if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
 					cout << "¢Í";
+				else if (_gameMap[i][j] == (char)Tile::DDONG)
+					cout << "¥Õ";
+				else if (_gameMap[i][j] == (char)Tile::FLOOR)
+					cout << "¡á";
 			}
 		}
 		cout << endl;
@@ -114,13 +128,13 @@ void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH])
 	strcpy_s(_gameMap[19], "100000000020000000001");
 	strcpy_s(_gameMap[20], "100000000000000000001");
 	strcpy_s(_gameMap[21], "100000000000000000001");
-	strcpy_s(_gameMap[22], "111111111111111111111");
+	strcpy_s(_gameMap[22], "155555555555555555551");
 }
 
-void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
+void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG)
 {
 	_eCurScene = Scene::GAME;
-	Update(_gameMap, _pPlayer);
+	Update(_gameMap, _pPlayer, vecDDONG);
 	Gotoxy(0, 0);
 	Render(_gameMap, _pPlayer);
 	FrameSync(30);

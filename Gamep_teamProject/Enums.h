@@ -17,5 +17,5 @@ enum class Scene
 
 enum class Tile
 {
-	BACK = '0', WALL, START, SPAWNDDONG
+	BACK = '0', WALL, START, SPAWNDDONG, DDONG, FLOOR
 };
