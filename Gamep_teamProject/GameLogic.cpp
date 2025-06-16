@@ -7,8 +7,8 @@
 void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 {
 	//SetConsoleFont(L"NSimsun", { 20,20 }, FW_BOLD);
-	//SetConsoleSettings(800, 600, false, L"Catch Of Crush");
-	SetCursorVisual(true, 50);
+	SetConsoleSettings(1000, 600, false, L"Catch Of Crush");
+	SetCursorVisual(false, 50);
 	LoadStage(_gameMap);
 	PlayerInit(_gameMap, _pPlayer);
 }
@@ -40,6 +40,7 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 
 void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 {
+	bool isMoving = false;
 	_pPlayer->position.tNewPos = _pPlayer->position.tPos;
 	Key eKey = KeyController();
 
@@ -104,6 +105,11 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	}
 }
 
+void RenderUI()
+{
+
+}
+
 void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH])
 {
 	strcpy_s(_gameMap[0], "133333333333333333331");
@@ -153,5 +159,16 @@ void InfoScene(Scene& _eCurScene)
 
 void RenderInfo()
 {
-	cout << "정보씬";
+	Gotoxy(47, 2);
+	cout << "조작법";
+	Gotoxy(47, 5);
+	cout << "양쪽 화살표로 좌우로 움직이기";
+	Gotoxy(47, 7);
+	cout << "플레이어와 장애물이 닿으면 게임 OVER";
+	Gotoxy(47, 9);
+	cout << "플레이어와 코인이 닿으면 점수 UP";
+	Gotoxy(47, 14);
+	cout << "ESC를 눌러서 타이틀로 돌아가기";
 }
+
+

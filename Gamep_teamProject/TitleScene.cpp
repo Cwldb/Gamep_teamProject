@@ -24,6 +24,7 @@ void TitleSceneUpdate(Scene& _eCurScene)
 		break;
 	case Menu::INFO:
 		_eCurScene = Scene::INFO;
+		system("cls");
 		break;
 	case Menu::QUIT:
 		_eCurScene = Scene::QUIT;
