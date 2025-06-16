@@ -3,8 +3,10 @@
 #include<vector>
 using std::vector;
 
-const int MAP_HEIGHT = 24;
+const int MAP_HEIGHT = 25;
 const int MAP_WIDTH = 22;
+const int DDONG_DROP_INTERVAL = 10;
+
 
 
 typedef struct _pos

@@ -5,8 +5,6 @@
 #include <algorithm>
 #include <random>
 
-const int DDONG_DROP_INTERVAL = 10;
-int g_ddongFrame = 0;
 
 void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 {
@@ -23,7 +21,6 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	{
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
-			// 맵 데이터에 의해 플레이어 세팅
 			if (_gameMap[i][j] == (char)Tile::START)
 				_pPlayer->position.tStartPos = { j, i };
 
@@ -60,7 +57,6 @@ void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	_pPlayer->position.tNewPos.x = std::clamp(_pPlayer->position.tNewPos.x, 0, MAP_WIDTH - 2);
 	_pPlayer->position.tNewPos.y = std::clamp(_pPlayer->position.tNewPos.y, 0, MAP_HEIGHT - 1);
 
-	// 최종 반영
 	if (_gameMap[_pPlayer->position.tNewPos.y][_pPlayer->position.tNewPos.x] != (char)Tile::WALL)
 		_pPlayer->position.tPos = _pPlayer->position.tNewPos;
 }
@@ -94,6 +90,8 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 					cout << "Φ";
 				else if (_gameMap[i][j] == (char)Tile::FLOOR)
 					cout << "■";
+				else if (_gameMap[i][j] == (char)Tile::COIN)
+					cout << "㉧";
 			}
 		}
 		cout << endl;
@@ -130,6 +128,7 @@ void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH])
 	strcpy_s(_gameMap[20], "100000000000000000001");
 	strcpy_s(_gameMap[21], "100000000000000000001");
 	strcpy_s(_gameMap[22], "155555555555555555551");
+
 }
 
 void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG)
@@ -143,61 +142,121 @@ void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER 
 
 void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG)
 {
-    g_ddongFrame++;
-    if (g_ddongFrame < DDONG_DROP_INTERVAL)
-        return;
-    g_ddongFrame = 0;
 
-    for (int i = MAP_HEIGHT - 2; i >= 0; --i)
-    {
-        for (int j = 0; j < MAP_WIDTH; ++j)
-        {
-            if (_gameMap[i][j] == (char)Tile::DDONG)
-            {
-                if (_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START)
-                {
-                    _gameMap[i + 1][j] = (char)Tile::DDONG;
-                    _gameMap[i][j] = (char)Tile::BACK;
-                }
-            }
-        }
-    }
+	for (int j = 0; j < MAP_WIDTH; ++j)
+	{
+		if (_gameMap[MAP_HEIGHT - 2][j] == (char)Tile::DDONG)
+			_gameMap[MAP_HEIGHT - 2][j] = (char)Tile::BACK;
+		if (_gameMap[MAP_HEIGHT - 2][j] == (char)Tile::COIN)
+			_gameMap[MAP_HEIGHT - 2][j] = (char)Tile::BACK;
+	}
 
-    std::vector<int> spawnCols;
-    for (int j = 0; j < MAP_WIDTH; ++j)
-    {
-        for (int i = 0; i < MAP_HEIGHT - 1; ++i)
-        {
-            if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
-            {
-                if (_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START)
-                {
-                    spawnCols.push_back(j);
-                }
-            }
-        }
-    }
+	for (int i = MAP_HEIGHT - 3; i >= 0; --i)
+	{
+		for (int j = 0; j < MAP_WIDTH; ++j)
+		{
+			if (_gameMap[i][j] == (char)Tile::DDONG)
+			{
+				if (_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START)
+				{
+					_gameMap[i + 1][j] = (char)Tile::DDONG;
+					_gameMap[i][j] = (char)Tile::BACK;
+				}
+			}
+			else if (_gameMap[i][j] == (char)Tile::COIN)
+			{
+				if (_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START)
+				{
+					_gameMap[i + 1][j] = (char)Tile::COIN;
+					_gameMap[i][j] = (char)Tile::BACK;
+				}
+			}
+		}
+	}
 
-    if (!spawnCols.empty())
-    {
-        static std::random_device rd;
-        static std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis(0, spawnCols.size() - 1);
-        int randIdx = dis(gen);
-        int spawnX = spawnCols[randIdx];
+	std::vector<int> spawnCols;
+	for (int j = 0; j < MAP_WIDTH; ++j)
+	{
+		for (int i = 0; i < MAP_HEIGHT - 1; ++i)
+		{
+			if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
+			{
+				if (_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START)
+				{
+					spawnCols.push_back(j);
+				}
+			}
+		}
+	}
 
-        for (int i = 0; i < MAP_HEIGHT - 1; ++i)
-        {
-            if (_gameMap[i][spawnX] == (char)Tile::SPAWNDDONG)
-            {
-                if (_gameMap[i + 1][spawnX] == (char)Tile::BACK || _gameMap[i + 1][spawnX] == (char)Tile::START)
-                {
-                    _gameMap[i + 1][spawnX] = (char)Tile::DDONG;
-                    break;
-                }
-            }
-        }
-    }
+	if (!spawnCols.empty())
+	{
+		static std::random_device rd;
+		static std::mt19937 gen(rd());
+		std::shuffle(spawnCols.begin(), spawnCols.end(), gen);
+
+		int dropCount = 3 + (gen() % 2);
+        dropCount = std::min<int>(dropCount, (int)spawnCols.size());
+		for (int n = 0; n < dropCount; ++n)
+		{
+			int spawnX = spawnCols[n];
+			for (int i = 0; i < MAP_HEIGHT - 1; ++i)
+			{
+				if (_gameMap[i][spawnX] == (char)Tile::SPAWNDDONG)
+				{
+					if (_gameMap[i + 1][spawnX] == (char)Tile::BACK || _gameMap[i + 1][spawnX] == (char)Tile::START)
+					{
+						_gameMap[i + 1][spawnX] = (char)Tile::DDONG;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	static int coinFrame = 0;
+	coinFrame++;
+	if (coinFrame >= 30)
+	{
+		coinFrame = 0;
+		std::vector<int> coinSpawnCols;
+		for (int j = 0; j < MAP_WIDTH; ++j)
+		{
+			for (int i = 0; i < MAP_HEIGHT - 1; ++i)
+			{
+				if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
+				{
+					if ((_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START) &&
+						_gameMap[i + 1][j] != (char)Tile::DDONG)
+					{
+						coinSpawnCols.push_back(j);
+					}
+				}
+			}
+		}
+
+		if (!coinSpawnCols.empty())
+		{
+			static std::random_device rd2;
+			static std::mt19937 gen2(rd2());
+			std::uniform_int_distribution<> dis2(0, coinSpawnCols.size() - 1);
+			int randIdx2 = dis2(gen2);
+			int spawnX2 = coinSpawnCols[randIdx2];
+
+			for (int i = 0; i < MAP_HEIGHT - 1; ++i)
+			{
+				if (_gameMap[i][spawnX2] == (char)Tile::SPAWNDDONG)
+				{
+					if ((_gameMap[i + 1][spawnX2] == (char)Tile::BACK || _gameMap[i + 1][spawnX2] == (char)Tile::START) &&
+						_gameMap[i + 1][spawnX2] != (char)Tile::DDONG)
+					{
+						_gameMap[i + 1][spawnX2] = (char)Tile::COIN;
+						break;
+					}
+				}
+			}
+		}
+	}
 }
 
 void InfoScene(Scene& _eCurScene)
