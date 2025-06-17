@@ -22,7 +22,7 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	{
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
-			// �� �����Ϳ� ���� �÷��̾� ����
+			// 맵 데이터에 의해 플레이어 세팅
 			if (_gameMap[i][j] == (char)Tile::START)
 				_pPlayer->position.tStartPos = { j, i };
 
@@ -58,7 +58,7 @@ void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	_pPlayer->position.tNewPos.x = std::clamp(_pPlayer->position.tNewPos.x, 0, MAP_WIDTH - 2);
 	_pPlayer->position.tNewPos.y = std::clamp(_pPlayer->position.tNewPos.y, 0, MAP_HEIGHT - 1);
 
-	// ���� �ݿ�
+	// 최종 반영
 	if (_gameMap[_pPlayer->position.tNewPos.y][_pPlayer->position.tNewPos.x] != (char)Tile::WALL)
 		_pPlayer->position.tPos = _pPlayer->position.tNewPos;
 }
@@ -77,23 +77,23 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
 			if (_pPlayer->position.tPos.x == j && _pPlayer->position.tPos.y == i)
-				cout << "��";
+				cout << "§";
 			else
 			{
 				if (_gameMap[i][j] == (char)Tile::BACK)
 					cout << "  ";
 				else if (_gameMap[i][j] == (char)Tile::WALL)
-					cout << "��";
+					cout << "■";
 				else if (_gameMap[i][j] == (char)Tile::START)
 					cout << "  ";
 				else if (_gameMap[i][j] == (char)Tile::DDONG)
-					cout << "��";
+					cout << "♨";
 				else if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
-					cout << "��";
+					cout << "※";
 				else if (_gameMap[i][j] == (char)Tile::FLOOR)
-					cout << "��";
+					cout << "■";
 				else if (_gameMap[i][j] == (char)Tile::COIN)
-					cout << "��";
+					cout << "㉧";
 
 			}
 		}
@@ -112,9 +112,9 @@ void RenderUI(PPLAYER _pPlayer)
 	cout << "--------------------";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
-	cout << "  ���� ��� : " << _pPlayer->state.coinCnt;
+	cout << "  현재 골드 : " << _pPlayer->state.coinCnt;
 	Gotoxy(x, y++);
-	cout << "  ���� �ð� : " << 60 << "��";
+	cout << "  남은 시간 : " << 60 << "초";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
 	cout << "--------------------";
@@ -156,28 +156,28 @@ void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER 
 	FrameSync(30);
 }
 
-void ClearBottomRow(char _gameMap[MAP_HEIGHT][MAP_WIDTH]) 
+void ClearBottomRow(char _gameMap[MAP_HEIGHT][MAP_WIDTH])
 {
 	for (int j = 0; j < MAP_WIDTH; ++j)
 		if (_gameMap[MAP_HEIGHT - 2][j] == (char)Tile::DDONG || _gameMap[MAP_HEIGHT - 2][j] == (char)Tile::COIN)
 			_gameMap[MAP_HEIGHT - 2][j] = (char)Tile::BACK;
 }
 
-void MoveTileDown(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, char newType) 
+void MoveTileDown(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, char newType)
 {
-	for (int i = MAP_HEIGHT - 2; i >= 0; --i) 
+	for (int i = MAP_HEIGHT - 2; i >= 0; --i)
 	{
-		for (int j = 0; j < MAP_WIDTH; ++j) 
+		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
-			if (_gameMap[i][j] == tileType) 
+			if (_gameMap[i][j] == tileType)
 			{
 				char& below = _gameMap[i + 1][j];
-				if (below == (char)Tile::BACK || below == (char)Tile::START) 
+				if (below == (char)Tile::BACK || below == (char)Tile::START)
 				{
 					below = tileType;
 					_gameMap[i][j] = (char)Tile::BACK;
 				}
-				else if (newType && below == (char)Tile::FLOOR) 
+				else if (newType && below == (char)Tile::FLOOR)
 				{
 					below = newType;
 					_gameMap[i][j] = (char)Tile::BACK;
@@ -187,12 +187,12 @@ void MoveTileDown(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, char newT
 	}
 }
 
-void SpawnTile(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, int maxSpawn) 
+void SpawnTile(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, int maxSpawn)
 {
 	std::vector<int> spawnCols;
-	for (int j = 0; j < MAP_WIDTH; ++j) 
+	for (int j = 0; j < MAP_WIDTH; ++j)
 	{
-		for (int i = 0; i < MAP_HEIGHT - 1; ++i) 
+		for (int i = 0; i < MAP_HEIGHT - 1; ++i)
 		{
 			if (_gameMap[i][j] == (char)Tile::SPAWNDDONG &&
 				(_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START))
@@ -200,17 +200,17 @@ void SpawnTile(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, int maxSpawn
 		}
 	}
 
-	if (!spawnCols.empty()) 
+	if (!spawnCols.empty())
 	{
 		static std::random_device rd;
 		static std::mt19937 gen(rd());
 		std::shuffle(spawnCols.begin(), spawnCols.end(), gen);
 		int count = std::min<int>(maxSpawn, spawnCols.size());
 
-		for (int n = 0; n < count; ++n) 
+		for (int n = 0; n < count; ++n)
 		{
 			int x = spawnCols[n];
-			for (int i = 0; i < MAP_HEIGHT - 1; ++i) 
+			for (int i = 0; i < MAP_HEIGHT - 1; ++i)
 			{
 				if (_gameMap[i][x] == (char)Tile::SPAWNDDONG &&
 					(_gameMap[i + 1][x] == (char)Tile::BACK || _gameMap[i + 1][x] == (char)Tile::START)) {
@@ -222,18 +222,18 @@ void SpawnTile(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, int maxSpawn
 	}
 }
 
-void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, PPLAYER _pPlayer, Scene& _eCurScene) 
+void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, PPLAYER _pPlayer, Scene& _eCurScene)
 {
 	auto& pos = _pPlayer->position.tPos;
 
 	char& curTile = _gameMap[pos.y][pos.x];
-	if (curTile == (char)Tile::DDONG) 
+	if (curTile == (char)Tile::DDONG)
 	{
 		_eCurScene = Scene::TITLE;
 		system("cls");
 		return;
 	}
-	if (curTile == (char)Tile::COIN) 
+	if (curTile == (char)Tile::COIN)
 	{
 		_pPlayer->state.coinCnt++;
 		curTile = (char)Tile::BACK;
@@ -242,7 +242,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 	ClearBottomRow(_gameMap);
 
 	g_ddongFrame++;
-	if (g_ddongFrame >= DDONG_DROP_INTERVAL) 
+	if (g_ddongFrame >= DDONG_DROP_INTERVAL)
 	{
 		g_ddongFrame = 0;
 
@@ -255,7 +255,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 	}
 
 	static int coinFrame = 0;
-	if (++coinFrame >= 30) 
+	if (++coinFrame >= 30)
 	{
 		coinFrame = 0;
 		SpawnTile(_gameMap, (char)Tile::COIN, 1);
@@ -276,15 +276,15 @@ void InfoScene(Scene& _eCurScene)
 void RenderInfo()
 {
 	Gotoxy(47, 2);
-	cout << "���۹�";
+	cout << "조작법";
 	Gotoxy(47, 5);
-	cout << "���� ȭ��ǥ�� �¿�� �����̱�";
+	cout << "양쪽 화살표로 좌우로 움직이기";
 	Gotoxy(47, 7);
-	cout << "�÷��̾�� ��ֹ��� ������ ���� OVER";
+	cout << "플레이어와 장애물이 닿으면 게임 OVER";
 	Gotoxy(47, 9);
-	cout << "�÷��̾�� ������ ������ ���� UP";
+	cout << "플레이어와 코인이 닿으면 점수 UP";
 	Gotoxy(47, 14);
-	cout << "ESC�� ������ Ÿ��Ʋ�� ���ư���";
+	cout << "ESC를 눌러서 타이틀로 돌아가기";
 }
 
 
