@@ -5,10 +5,12 @@ Key KeyController()
 {
 	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
 	{
+		Sleep(60);
 		return Key::LEFT;
 	}
 	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
 	{
+		Sleep(60);
 		return Key::RIGHT;
 	}
 	if (GetAsyncKeyState(VK_UP) & 0x8000)
@@ -25,7 +27,7 @@ Key KeyController()
 	}
 	if (GetAsyncKeyState(VK_ESCAPE) && 0x8000)
 	{
-		Sleep(40);
+		Sleep(60);
 		return Key::ESC;
 	}
 

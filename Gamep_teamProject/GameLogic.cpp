@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <random>
 
-const int DDONG_DROP_INTERVAL = 10;
+//const int DDONG_DROP_INTERVAL = 10;
 int g_ddongFrame = 0;
 
 void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)

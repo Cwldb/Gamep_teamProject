@@ -13,12 +13,6 @@ typedef struct _pos
 {
     int x;
     int y;
-    bool operator == (_pos other)
-    //bool operator== (const _pos& other) const
-    {
-        return (x == other.x && y == other.y);
-    }
-
 }POS, * PPOS;
 
 typedef struct _playerstate
