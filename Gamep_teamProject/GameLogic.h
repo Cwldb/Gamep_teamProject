@@ -54,3 +54,7 @@ void RenderInfo();
 
 void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
 void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
+
+void ClearBottomRow(char _gameMap[MAP_HEIGHT][MAP_WIDTH]);
+void MoveTileDown(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, char newType = 0);
+void SpawnTile(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, int maxSpawn);

@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <random>
 
-//const int DDONG_DROP_INTERVAL = 10;
 int g_ddongFrame = 0;
 
 void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
@@ -23,7 +22,7 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	{
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
-			// ¸Ê µ¥ÀÌÅÍ¿¡ ÀÇÇØ ÇÃ·¹ÀÌ¾î ¼¼ÆÃ
+			// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½
 			if (_gameMap[i][j] == (char)Tile::START)
 				_pPlayer->position.tStartPos = { j, i };
 
@@ -59,7 +58,7 @@ void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	_pPlayer->position.tNewPos.x = std::clamp(_pPlayer->position.tNewPos.x, 0, MAP_WIDTH - 2);
 	_pPlayer->position.tNewPos.y = std::clamp(_pPlayer->position.tNewPos.y, 0, MAP_HEIGHT - 1);
 
-	// ÃÖÁ¾ ¹Ý¿µ
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¿ï¿½
 	if (_gameMap[_pPlayer->position.tNewPos.y][_pPlayer->position.tNewPos.x] != (char)Tile::WALL)
 		_pPlayer->position.tPos = _pPlayer->position.tNewPos;
 }
@@ -78,23 +77,23 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
 			if (_pPlayer->position.tPos.x == j && _pPlayer->position.tPos.y == i)
-				cout << "¡×";
+				cout << "ï¿½ï¿½";
 			else
 			{
 				if (_gameMap[i][j] == (char)Tile::BACK)
 					cout << "  ";
 				else if (_gameMap[i][j] == (char)Tile::WALL)
-					cout << "¡á";
+					cout << "ï¿½ï¿½";
 				else if (_gameMap[i][j] == (char)Tile::START)
 					cout << "  ";
-				else if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
-					cout << "¢Í";
 				else if (_gameMap[i][j] == (char)Tile::DDONG)
-					cout << "¥Õ";
+					cout << "ï¿½ï¿½";
+				else if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
+					cout << "ï¿½ï¿½";
 				else if (_gameMap[i][j] == (char)Tile::FLOOR)
-					cout << "¡á";
+					cout << "ï¿½ï¿½";
 				else if (_gameMap[i][j] == (char)Tile::COIN)
-					cout << "¨¸";
+					cout << "ï¿½ï¿½";
 
 			}
 		}
@@ -113,9 +112,9 @@ void RenderUI(PPLAYER _pPlayer)
 	cout << "--------------------";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
-	cout << "  ÇöÀç °ñµå : " << _pPlayer->state.coinCnt;
+	cout << "  ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ : " << _pPlayer->state.coinCnt;
 	Gotoxy(x, y++);
-	cout << "  ³²Àº ½Ã°£ : " << 60 << "ÃÊ";
+	cout << "  ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ : " << 60 << "ï¿½ï¿½";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
 	cout << "--------------------";
@@ -157,160 +156,110 @@ void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER 
 	FrameSync(30);
 }
 
-void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, PPLAYER _pPlayer, Scene& _eCurScene)
+void ClearBottomRow(char _gameMap[MAP_HEIGHT][MAP_WIDTH]) 
 {
-	if (_gameMap[_pPlayer->position.tPos.y][_pPlayer->position.tPos.x] == (char)Tile::DDONG)
-	{
-		system("cls");
-		_eCurScene = Scene::TITLE;
-		return;
-	}
-
-	if(_gameMap[_pPlayer->position.tPos.y][_pPlayer->position.tPos.x] == (char)Tile::COIN)
-	{
-		_pPlayer->state.coinCnt++;
-		_gameMap[_pPlayer->position.tPos.y][_pPlayer->position.tPos.x] = (char)Tile::BACK;
-	}
-
 	for (int j = 0; j < MAP_WIDTH; ++j)
-	{
-		if (_gameMap[MAP_HEIGHT - 2][j] == (char)Tile::DDONG)
+		if (_gameMap[MAP_HEIGHT - 2][j] == (char)Tile::DDONG || _gameMap[MAP_HEIGHT - 2][j] == (char)Tile::COIN)
 			_gameMap[MAP_HEIGHT - 2][j] = (char)Tile::BACK;
-		if (_gameMap[MAP_HEIGHT - 2][j] == (char)Tile::COIN)
-			_gameMap[MAP_HEIGHT - 2][j] = (char)Tile::BACK;
-	}
+}
 
-    g_ddongFrame++;
-    if (g_ddongFrame < DDONG_DROP_INTERVAL)
-        return;
-    g_ddongFrame = 0;
-
-	for (int i = MAP_HEIGHT - 2; i >= 0; --i)
+void MoveTileDown(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, char newType) 
+{
+	for (int i = MAP_HEIGHT - 2; i >= 0; --i) 
 	{
-		for (int j = 0; j < MAP_WIDTH; ++j)
+		for (int j = 0; j < MAP_WIDTH; ++j) 
 		{
-			if (_gameMap[i][j] == (char)Tile::DDONG)
+			if (_gameMap[i][j] == tileType) 
 			{
-				if (_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START)
+				char& below = _gameMap[i + 1][j];
+				if (below == (char)Tile::BACK || below == (char)Tile::START) 
 				{
-					_gameMap[i + 1][j] = (char)Tile::DDONG;
+					below = tileType;
 					_gameMap[i][j] = (char)Tile::BACK;
 				}
-				else if (_gameMap[i + 1][j] == (char)Tile::FLOOR)
+				else if (newType && below == (char)Tile::FLOOR) 
 				{
+					below = newType;
 					_gameMap[i][j] = (char)Tile::BACK;
 				}
 			}
 		}
 	}
+}
 
-	for (int i = MAP_HEIGHT - 3; i >= 0; --i)
+void SpawnTile(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, int maxSpawn) 
+{
+	std::vector<int> spawnCols;
+	for (int j = 0; j < MAP_WIDTH; ++j) 
 	{
-		for (int j = 0; j < MAP_WIDTH; ++j)
+		for (int i = 0; i < MAP_HEIGHT - 1; ++i) 
 		{
-			if (_gameMap[i][j] == (char)Tile::DDONG)
-			{
-				if (_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START)
-				{
-					_gameMap[i + 1][j] = (char)Tile::DDONG;
-					_gameMap[i][j] = (char)Tile::BACK;
-				}
-			}
-			else if (_gameMap[i][j] == (char)Tile::COIN)
-			{
-				if (_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START)
-				{
-					_gameMap[i + 1][j] = (char)Tile::COIN;
-					_gameMap[i][j] = (char)Tile::BACK;
-				}
-			}
+			if (_gameMap[i][j] == (char)Tile::SPAWNDDONG &&
+				(_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START))
+				spawnCols.push_back(j);
 		}
 	}
 
-    std::vector<int> spawnCols;
-    for (int j = 0; j < MAP_WIDTH; ++j)
-    {
-        for (int i = 0; i < MAP_HEIGHT - 1; ++i)
-        {
-            if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
-            {
-                if (_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START)
-                {
-                    spawnCols.push_back(j);
-                }
-            }
-        }
-    }
-
-	if (!spawnCols.empty())
+	if (!spawnCols.empty()) 
 	{
 		static std::random_device rd;
 		static std::mt19937 gen(rd());
 		std::shuffle(spawnCols.begin(), spawnCols.end(), gen);
+		int count = std::min<int>(maxSpawn, spawnCols.size());
 
-		int dropCount = 3 + (gen() % 2);
-		dropCount = std::min<int>(dropCount, (int)spawnCols.size());
-		for (int n = 0; n < dropCount; ++n)
+		for (int n = 0; n < count; ++n) 
 		{
-			int spawnX = spawnCols[n];
-			for (int i = 0; i < MAP_HEIGHT - 1; ++i)
+			int x = spawnCols[n];
+			for (int i = 0; i < MAP_HEIGHT - 1; ++i) 
 			{
-				if (_gameMap[i][spawnX] == (char)Tile::SPAWNDDONG)
-				{
-					if (_gameMap[i + 1][spawnX] == (char)Tile::BACK || _gameMap[i + 1][spawnX] == (char)Tile::START)
-					{
-						_gameMap[i + 1][spawnX] = (char)Tile::DDONG;
-						break;
-					}
+				if (_gameMap[i][x] == (char)Tile::SPAWNDDONG &&
+					(_gameMap[i + 1][x] == (char)Tile::BACK || _gameMap[i + 1][x] == (char)Tile::START)) {
+					_gameMap[i + 1][x] = tileType;
+					break;
 				}
 			}
 		}
+	}
+}
+
+void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, PPLAYER _pPlayer, Scene& _eCurScene) 
+{
+	auto& pos = _pPlayer->position.tPos;
+
+	char& curTile = _gameMap[pos.y][pos.x];
+	if (curTile == (char)Tile::DDONG) 
+	{
+		_eCurScene = Scene::TITLE;
+		system("cls");
+		return;
+	}
+	if (curTile == (char)Tile::COIN) 
+	{
+		_pPlayer->state.coinCnt++;
+		curTile = (char)Tile::BACK;
+	}
+
+	ClearBottomRow(_gameMap);
+
+	g_ddongFrame++;
+	if (g_ddongFrame >= DDONG_DROP_INTERVAL) 
+	{
+		g_ddongFrame = 0;
+
+		MoveTileDown(_gameMap, (char)Tile::DDONG, (char)Tile::FLOOR);
+		MoveTileDown(_gameMap, (char)Tile::DDONG);
+		MoveTileDown(_gameMap, (char)Tile::COIN);
+
+		int dropCount = rand() % 3;
+		SpawnTile(_gameMap, (char)Tile::DDONG, dropCount);
 	}
 
 	static int coinFrame = 0;
-	coinFrame++;
-	if (coinFrame >= 30)
+	if (++coinFrame >= 30) 
 	{
 		coinFrame = 0;
-		std::vector<int> coinSpawnCols;
-		for (int j = 0; j < MAP_WIDTH; ++j)
-		{
-			for (int i = 0; i < MAP_HEIGHT - 1; ++i)
-			{
-				if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
-				{
-					if ((_gameMap[i + 1][j] == (char)Tile::BACK || _gameMap[i + 1][j] == (char)Tile::START) &&
-						_gameMap[i + 1][j] != (char)Tile::DDONG)
-					{
-						coinSpawnCols.push_back(j);
-					}
-				}
-			}
-		}
-
-		if (!coinSpawnCols.empty())
-		{
-			static std::random_device rd2;
-			static std::mt19937 gen2(rd2());
-			std::uniform_int_distribution<> dis2(0, coinSpawnCols.size() - 1);
-			int randIdx2 = dis2(gen2);
-			int spawnX2 = coinSpawnCols[randIdx2];
-
-			for (int i = 0; i < MAP_HEIGHT - 1; ++i)
-			{
-				if (_gameMap[i][spawnX2] == (char)Tile::SPAWNDDONG)
-				{
-					if ((_gameMap[i + 1][spawnX2] == (char)Tile::BACK || _gameMap[i + 1][spawnX2] == (char)Tile::START) &&
-						_gameMap[i + 1][spawnX2] != (char)Tile::DDONG)
-					{
-						_gameMap[i + 1][spawnX2] = (char)Tile::COIN;
-						break;
-					}
-				}
-			}
-		}
+		SpawnTile(_gameMap, (char)Tile::COIN, 1);
 	}
-
 }
 
 void InfoScene(Scene& _eCurScene)
@@ -327,15 +276,15 @@ void InfoScene(Scene& _eCurScene)
 void RenderInfo()
 {
 	Gotoxy(47, 2);
-	cout << "Á¶ÀÛ¹ý";
+	cout << "ï¿½ï¿½ï¿½Û¹ï¿½";
 	Gotoxy(47, 5);
-	cout << "¾çÂÊ È­»ìÇ¥·Î ÁÂ¿ì·Î ¿òÁ÷ÀÌ±â";
+	cout << "ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½Â¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì±ï¿½";
 	Gotoxy(47, 7);
-	cout << "ÇÃ·¹ÀÌ¾î¿Í Àå¾Ö¹°ÀÌ ´êÀ¸¸é °ÔÀÓ OVER";
+	cout << "ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ OVER";
 	Gotoxy(47, 9);
-	cout << "ÇÃ·¹ÀÌ¾î¿Í ÄÚÀÎÀÌ ´êÀ¸¸é Á¡¼ö UP";
+	cout << "ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ UP";
 	Gotoxy(47, 14);
-	cout << "ESC¸¦ ´­·¯¼­ Å¸ÀÌÆ²·Î µ¹¾Æ°¡±â";
+	cout << "ESCï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½Æ²ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½";
 }
 
 
