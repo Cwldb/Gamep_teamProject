@@ -1,4 +1,4 @@
-ï»¿#include "GameLogic.h"
+#include "GameLogic.h"
 #include "TitleScene.h"
 #include "Console.h"
 #include "KeyController.h"
@@ -22,7 +22,7 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	{
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
-			// ë§µ ë°ì´í„°ì— ì˜í•´ í”Œë ˆì´ì–´ ì„¸íŒ…
+			// ¸Ê µ¥ÀÌÅÍ¿¡ ÀÇÇØ ÇÃ·¹ÀÌ¾î ¼¼ÆÃ
 			if (_gameMap[i][j] == (char)Tile::START)
 				_pPlayer->position.tStartPos = { j, i };
 
@@ -58,7 +58,7 @@ void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	_pPlayer->position.tNewPos.x = std::clamp(_pPlayer->position.tNewPos.x, 0, MAP_WIDTH - 2);
 	_pPlayer->position.tNewPos.y = std::clamp(_pPlayer->position.tNewPos.y, 0, MAP_HEIGHT - 1);
 
-	// ìµœì¢… ë°˜ì˜
+	// ÃÖÁ¾ ¹Ý¿µ
 	if (_gameMap[_pPlayer->position.tNewPos.y][_pPlayer->position.tNewPos.x] != (char)Tile::WALL)
 		_pPlayer->position.tPos = _pPlayer->position.tNewPos;
 }
@@ -78,23 +78,27 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 		{
 			if (_pPlayer->position.tPos.x == j && _pPlayer->position.tPos.y == i)
 
-				cout << "Â§";
+				cout << "¡×";
 			else
 			{
 				if (_gameMap[i][j] == (char)Tile::BACK)
 					cout << "  ";
 				else if (_gameMap[i][j] == (char)Tile::WALL)
-					cout << "â– ";
+					cout << "¡á";
 				else if (_gameMap[i][j] == (char)Tile::START)
 					cout << "  ";
 				else if (_gameMap[i][j] == (char)Tile::DDONG)
-					cout << "â™¨";
+					cout << "¢Í";
 				else if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
-					cout << "â€»";
+					cout << "¡Ø";
 				else if (_gameMap[i][j] == (char)Tile::FLOOR)
-					cout << "â– ";
+					cout << "¡á";
 				else if (_gameMap[i][j] == (char)Tile::COIN)
-					cout << "ã‰§";
+				{
+					SetColor(COLOR::LIGHT_YELLOW, COLOR::BLACK);
+					cout << "¨¸";
+					SetColor();
+				}
 
 			}
 		}
@@ -113,9 +117,9 @@ void RenderUI(PPLAYER _pPlayer)
 	cout << "--------------------";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
-	cout << "  í˜„ìž¬ ê³¨ë“œ : " << _pPlayer->state.coinCnt;
+	cout << "  ÇöÀç °ñµå : " << _pPlayer->state.coinCnt;
 	Gotoxy(x, y++);
-	cout << "  ë‚¨ì€ ì‹œê°„ : " << 60 << "ì´ˆ";
+	cout << "  ³²Àº ½Ã°£ : " << 60 << "ÃÊ";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
 	cout << "--------------------";
@@ -278,15 +282,15 @@ void InfoScene(Scene& _eCurScene)
 void RenderInfo()
 {
 	Gotoxy(47, 2);
-	cout << "ì¡°ìž‘ë²•";
+	cout << "Á¶ÀÛ¹ý";
 	Gotoxy(47, 5);
-	cout << "ì–‘ìª½ í™”ì‚´í‘œë¡œ ì¢Œìš°ë¡œ ì›€ì§ì´ê¸°";
+	cout << "¾çÂÊ È­»ìÇ¥·Î ÁÂ¿ì·Î ¿òÁ÷ÀÌ±â";
 	Gotoxy(47, 7);
-	cout << "í”Œë ˆì´ì–´ì™€ ìž¥ì• ë¬¼ì´ ë‹¿ìœ¼ë©´ ê²Œìž„ OVER";
+	cout << "ÇÃ·¹ÀÌ¾î¿Í Àå¾Ö¹°ÀÌ ´êÀ¸¸é °ÔÀÓ OVER";
 	Gotoxy(47, 9);
-	cout << "í”Œë ˆì´ì–´ì™€ ì½”ì¸ì´ ë‹¿ìœ¼ë©´ ì ìˆ˜ UP";
+	cout << "ÇÃ·¹ÀÌ¾î¿Í ÄÚÀÎÀÌ ´êÀ¸¸é Á¡¼ö UP";
 	Gotoxy(47, 14);
-	cout << "ESCë¥¼ ëˆŒëŸ¬ì„œ íƒ€ì´í‹€ë¡œ ëŒì•„ê°€ê¸°";
+	cout << "ESC¸¦ ´­·¯¼­ Å¸ÀÌÆ²·Î µ¹¾Æ°¡±â";
 }
 
 
