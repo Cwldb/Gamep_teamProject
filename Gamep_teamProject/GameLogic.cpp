@@ -1,4 +1,4 @@
-#include "GameLogic.h"
+ï»¿#include "GameLogic.h"
 #include "TitleScene.h"
 #include "Console.h"
 #include "KeyController.h"
@@ -22,7 +22,7 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	{
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
-			// ¸Ê µ¥ÀÌÅÍ¿¡ ÀÇÇØ ÇÃ·¹ÀÌ¾î ¼¼ÆÃ
+			// ë§µ ë°ì´í„°ì— ì˜í•´ í”Œë ˆì´ì–´ ì„¸íŒ…
 			if (_gameMap[i][j] == (char)Tile::START)
 				_pPlayer->position.tStartPos = { j, i };
 
@@ -58,7 +58,7 @@ void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	_pPlayer->position.tNewPos.x = std::clamp(_pPlayer->position.tNewPos.x, 0, MAP_WIDTH - 2);
 	_pPlayer->position.tNewPos.y = std::clamp(_pPlayer->position.tNewPos.y, 0, MAP_HEIGHT - 1);
 
-	// ÃÖÁ¾ ¹Ý¿µ
+	// ìµœì¢… ë°˜ì˜
 	if (_gameMap[_pPlayer->position.tNewPos.y][_pPlayer->position.tNewPos.x] != (char)Tile::WALL)
 		_pPlayer->position.tPos = _pPlayer->position.tNewPos;
 }
@@ -77,23 +77,24 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
 			if (_pPlayer->position.tPos.x == j && _pPlayer->position.tPos.y == i)
-				cout << "¡×";
+
+				cout << "Â§";
 			else
 			{
 				if (_gameMap[i][j] == (char)Tile::BACK)
 					cout << "  ";
 				else if (_gameMap[i][j] == (char)Tile::WALL)
-					cout << "¡á";
+					cout << "â– ";
 				else if (_gameMap[i][j] == (char)Tile::START)
 					cout << "  ";
 				else if (_gameMap[i][j] == (char)Tile::DDONG)
-					cout << "¢Í";
+					cout << "â™¨";
 				else if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
-					cout << "¡Ø";
+					cout << "â€»";
 				else if (_gameMap[i][j] == (char)Tile::FLOOR)
-					cout << "¡á";
+					cout << "â– ";
 				else if (_gameMap[i][j] == (char)Tile::COIN)
-					cout << "¨¸";
+					cout << "ã‰§";
 
 			}
 		}
@@ -112,9 +113,9 @@ void RenderUI(PPLAYER _pPlayer)
 	cout << "--------------------";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
-	cout << "  ÇöÀç °ñµå : " << _pPlayer->state.coinCnt;
+	cout << "  í˜„ìž¬ ê³¨ë“œ : " << _pPlayer->state.coinCnt;
 	Gotoxy(x, y++);
-	cout << "  ³²Àº ½Ã°£ : " << 60 << "ÃÊ";
+	cout << "  ë‚¨ì€ ì‹œê°„ : " << 60 << "ì´ˆ";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
 	cout << "--------------------";
@@ -144,7 +145,8 @@ void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH])
 	strcpy_s(_gameMap[19], "100000000020000000001");
 	strcpy_s(_gameMap[20], "100000000000000000001");
 	strcpy_s(_gameMap[21], "100000000000000000001");
-	strcpy_s(_gameMap[22], "155555555555555555551");
+	strcpy_s(_gameMap[22], "100000000000000000001");
+	strcpy_s(_gameMap[23], "155555555555555555551");
 }
 
 void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG)
@@ -248,14 +250,14 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 
 		MoveTileDown(_gameMap, (char)Tile::DDONG, (char)Tile::FLOOR);
 		MoveTileDown(_gameMap, (char)Tile::DDONG);
-		MoveTileDown(_gameMap, (char)Tile::COIN);
+		MoveTileDown(_gameMap, (char)Tile::COIN, (char)Tile::FLOOR);
 
 		int dropCount = rand() % 3;
 		SpawnTile(_gameMap, (char)Tile::DDONG, dropCount);
 	}
 
 	static int coinFrame = 0;
-	if (++coinFrame >= 30)
+	if (++coinFrame >= 100)
 	{
 		coinFrame = 0;
 		SpawnTile(_gameMap, (char)Tile::COIN, 1);
@@ -276,15 +278,15 @@ void InfoScene(Scene& _eCurScene)
 void RenderInfo()
 {
 	Gotoxy(47, 2);
-	cout << "Á¶ÀÛ¹ý";
+	cout << "ì¡°ìž‘ë²•";
 	Gotoxy(47, 5);
-	cout << "¾çÂÊ È­»ìÇ¥·Î ÁÂ¿ì·Î ¿òÁ÷ÀÌ±â";
+	cout << "ì–‘ìª½ í™”ì‚´í‘œë¡œ ì¢Œìš°ë¡œ ì›€ì§ì´ê¸°";
 	Gotoxy(47, 7);
-	cout << "ÇÃ·¹ÀÌ¾î¿Í Àå¾Ö¹°ÀÌ ´êÀ¸¸é °ÔÀÓ OVER";
+	cout << "í”Œë ˆì´ì–´ì™€ ìž¥ì• ë¬¼ì´ ë‹¿ìœ¼ë©´ ê²Œìž„ OVER";
 	Gotoxy(47, 9);
-	cout << "ÇÃ·¹ÀÌ¾î¿Í ÄÚÀÎÀÌ ´êÀ¸¸é Á¡¼ö UP";
+	cout << "í”Œë ˆì´ì–´ì™€ ì½”ì¸ì´ ë‹¿ìœ¼ë©´ ì ìˆ˜ UP";
 	Gotoxy(47, 14);
-	cout << "ESC¸¦ ´­·¯¼­ Å¸ÀÌÆ²·Î µ¹¾Æ°¡±â";
+	cout << "ESCë¥¼ ëˆŒëŸ¬ì„œ íƒ€ì´í‹€ë¡œ ëŒì•„ê°€ê¸°";
 }
 
 
