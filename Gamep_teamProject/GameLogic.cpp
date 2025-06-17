@@ -87,13 +87,21 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 				else if (_gameMap[i][j] == (char)Tile::START)
 					cout << "  ";
 				else if (_gameMap[i][j] == (char)Tile::DDONG)
+				{
+					SetColor(COLOR::YELLOW, COLOR::BLACK);
 					cout << "¢Í";
+					SetColor();
+				}
 				else if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
 					cout << "¡Ø";
 				else if (_gameMap[i][j] == (char)Tile::FLOOR)
 					cout << "¡á";
 				else if (_gameMap[i][j] == (char)Tile::COIN)
+				{
+					SetColor(COLOR::LIGHT_YELLOW, COLOR::BLACK);
 					cout << "¨¸";
+					SetColor();
+				}
 
 			}
 		}
