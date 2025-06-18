@@ -70,7 +70,7 @@ void Update(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG
 }
 
 
-void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
+void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, int _startTime)
 {
 	for (int i = 0; i < MAP_HEIGHT; ++i)
 	{
@@ -99,15 +99,14 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 					cout << "㉧";
 					SetColor();
 				}
-
 			}
 		}
 		cout << endl;
 	}
-	RenderUI(_pPlayer);
+	RenderUI(_pPlayer, _startTime);
 }
 
-void RenderUI(PPLAYER _pPlayer)
+void RenderUI(PPLAYER _pPlayer, int _startTime)
 {
 	COORD consoleSize = GetConsoleResolution();
 	int x = consoleSize.X / 2;
@@ -119,7 +118,7 @@ void RenderUI(PPLAYER _pPlayer)
 	Gotoxy(x, y++);
 	cout << "  현재 골드 : " << _pPlayer->state.coinCnt;
 	Gotoxy(x, y++);
-	cout << "  남은 시간 : " << 60 << "초";
+	cout << "  남은 시간 : " << _startTime - time(0)<< "초";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
 	cout << "--------------------";
@@ -153,12 +152,12 @@ void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH])
 	strcpy_s(_gameMap[23], "155555555555555555551");
 }
 
-void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG)
+void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG, int _startTime)
 {
 	_eCurScene = Scene::GAME;
 	Update(_gameMap, _pPlayer, vecDDONG, _eCurScene);
 	Gotoxy(0, 0);
-	Render(_gameMap, _pPlayer);
+	Render(_gameMap, _pPlayer, _startTime);
 	FrameSync(30);
 }
 
@@ -178,7 +177,7 @@ void MoveTileDown(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, char newT
 			if (_gameMap[i][j] == tileType)
 			{
 				char& below = _gameMap[i + 1][j];
-				if (below == (char)Tile::BACK || below == (char)Tile::START)
+				if (below == (char)Tile::BACK || below == (char)Tile::START || below == (char)Tile::COIN)
 				{
 					below = tileType;
 					_gameMap[i][j] = (char)Tile::BACK;

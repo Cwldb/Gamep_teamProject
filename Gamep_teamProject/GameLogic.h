@@ -1,13 +1,12 @@
 #pragma once
 #include "Enums.h"
+#include <ctime>
 #include<vector>
 using std::vector;
 
 const int MAP_HEIGHT = 25;
 const int MAP_WIDTH = 22;
 const int DDONG_DROP_INTERVAL = 10;
-
-
 
 typedef struct _pos
 {
@@ -44,10 +43,10 @@ void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
 
 void Update(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG, Scene& _eCurScene);
 
-void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
-void RenderUI(PPLAYER _pPlayer);
+void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, int _startTime);
+void RenderUI(PPLAYER _pPlayer, int _startTime);
 void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH]);
-void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG);
+void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG, int _startTime);
 void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, PPLAYER _pPlayer, Scene& _eCurScene);
 void InfoScene(Scene& _eCurScene);
 void RenderInfo();
