@@ -1,6 +1,9 @@
 #include "TitleScene.h"
 #include "GameLogic.h"
 #include <iostream>
+using std::cout;
+using std::endl;
+
 
 int main()
 {
@@ -18,10 +21,14 @@ int main()
 			TitleScene(curScene);
 			break;
 		case Scene::GAME:
-			GameScene(curScene, gameMap, &player, vecDDONG, startTime);
+			if (player.isGameOver == false)
+				GameScene(curScene, gameMap, &player, vecDDONG, startTime);
 			break;
 		case Scene::INFO:
-			InfoScene(curScene);
+			InfoScene(curScene, &player);
+			break;
+		case Scene::GAMEOVER:
+			GameOverScene(curScene, &player);
 			break;
 		}
 	}

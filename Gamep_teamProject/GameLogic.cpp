@@ -1,9 +1,12 @@
-#include "GameLogic.h"
+﻿#include "GameLogic.h"
 #include "TitleScene.h"
 #include "Console.h"
 #include "KeyController.h"
 #include <algorithm>
 #include <random>
+#include <Windows.h>
+#include <io.h>
+#include <fcntl.h>
 
 int g_ddongFrame = 0;
 
@@ -22,7 +25,7 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	{
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
-			// �� �����Ϳ� ���� �÷��̾� ����
+			// 맵 데이터에 의해 플레이어 세팅
 			if (_gameMap[i][j] == (char)Tile::START)
 				_pPlayer->position.tStartPos = { j, i };
 
@@ -58,7 +61,7 @@ void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	_pPlayer->position.tNewPos.x = std::clamp(_pPlayer->position.tNewPos.x, 0, MAP_WIDTH - 2);
 	_pPlayer->position.tNewPos.y = std::clamp(_pPlayer->position.tNewPos.y, 0, MAP_HEIGHT - 1);
 
-	// ���� �ݿ�
+	// 최종 반영
 	if (_gameMap[_pPlayer->position.tNewPos.y][_pPlayer->position.tNewPos.x] != (char)Tile::WALL)
 		_pPlayer->position.tPos = _pPlayer->position.tNewPos;
 }
@@ -70,33 +73,34 @@ void Update(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG
 }
 
 
-void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, int _startTime)
+void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 {
+
 	for (int i = 0; i < MAP_HEIGHT; ++i)
 	{
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
 			if (_pPlayer->position.tPos.x == j && _pPlayer->position.tPos.y == i)
 
-				cout << "��";
+				cout << "§";
 			else
 			{
 				if (_gameMap[i][j] == (char)Tile::BACK)
 					cout << "  ";
 				else if (_gameMap[i][j] == (char)Tile::WALL)
-					cout << "��";
+					cout << "■";
 				else if (_gameMap[i][j] == (char)Tile::START)
 					cout << "  ";
 				else if (_gameMap[i][j] == (char)Tile::DDONG)
-					cout << "��";
+					cout << "♨";
 				else if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
-					cout << "��";
+					cout << "※";
 				else if (_gameMap[i][j] == (char)Tile::FLOOR)
-					cout << "��";
+					cout << "■";
 				else if (_gameMap[i][j] == (char)Tile::COIN)
 				{
 					SetColor(COLOR::LIGHT_YELLOW, COLOR::BLACK);
-					cout << "��";
+					cout << "㉧";
 					SetColor();
 				}
 			}
@@ -104,6 +108,12 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, int _startTi
 		cout << endl;
 	}
 	RenderUI(_pPlayer, _startTime);
+
+	if (_eCurScene == Scene::GAMEOVER)
+	{
+		system("cls");
+		return;
+	}
 }
 
 void RenderUI(PPLAYER _pPlayer, int _startTime)
@@ -116,9 +126,9 @@ void RenderUI(PPLAYER _pPlayer, int _startTime)
 	cout << "--------------------";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
-	cout << "  ���� ��� : " << _pPlayer->state.coinCnt;
+	cout << "  현재 골드 : " << _pPlayer->state.coinCnt;
 	Gotoxy(x, y++);
-	cout << "  ���� �ð� : " << _startTime - time(0)<< "��";
+	cout << "  남은 시간 : " << _startTime - time(0)<< "초";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
 	cout << "--------------------";
@@ -157,7 +167,7 @@ void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER 
 	_eCurScene = Scene::GAME;
 	Update(_gameMap, _pPlayer, vecDDONG, _eCurScene);
 	Gotoxy(0, 0);
-	Render(_gameMap, _pPlayer, _startTime);
+	Render(_gameMap, _pPlayer, _startTime, _eCurScene);
 	FrameSync(30);
 }
 
@@ -234,8 +244,9 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 	char& curTile = _gameMap[pos.y][pos.x];
 	if (curTile == (char)Tile::DDONG)
 	{
-		_eCurScene = Scene::TITLE;
 		system("cls");
+		_pPlayer->isGameOver == true;
+		_eCurScene = Scene::GAMEOVER;
 		return;
 	}
 	if (curTile == (char)Tile::COIN)
@@ -267,10 +278,10 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 	}
 }
 
-void InfoScene(Scene& _eCurScene)
+void InfoScene(Scene& _eCurScene, PPLAYER _pPlayer)
 {
 	Key eKey = KeyController();
-	RenderInfo();
+	RenderInfo(_pPlayer);
 	if (eKey == Key::ESC)
 	{
 		_eCurScene = Scene::TITLE;
@@ -278,18 +289,49 @@ void InfoScene(Scene& _eCurScene)
 	}
 }
 
-void RenderInfo()
+void RenderInfo(PPLAYER _pPlayer)
 {
 	Gotoxy(47, 2);
-	cout << "���۹�";
+	cout << "조작법";
 	Gotoxy(47, 5);
-	cout << "���� ȭ��ǥ�� �¿�� �����̱�";
+	cout << "양쪽 화살표로 좌우로 움직이기";
 	Gotoxy(47, 7);
-	cout << "�÷��̾�� ��ֹ��� ������ ���� OVER";
+	cout << "플레이어와 장애물이 닿으면 게임 OVER";
 	Gotoxy(47, 9);
-	cout << "�÷��̾�� ������ ������ ���� UP";
+	cout << "플레이어와 코인이 닿으면 점수 UP";
 	Gotoxy(47, 14);
-	cout << "ESC�� ������ Ÿ��Ʋ�� ���ư���";
+	cout << "ESC를 눌러서 타이틀로 돌아가기";
+	Gotoxy(47, 20);
+	cout << _pPlayer->isGameOver;
+}
+
+void GameOverScene(Scene& _eCurScene, PPLAYER _pPlayer)
+{
+	_pPlayer->isGameOver == true;
+	Key eKey = KeyController();
+	RenderGameOver();
+	if (eKey == Key::ESC)
+	{
+		_eCurScene = Scene::TITLE;
+		system("cls");
+	}
+}
+
+
+void RenderGameOver()
+{
+	COORD resolution = GetConsoleResolution();
+	int y = resolution.Y / 3;
+	int coutmode = _setmode(_fileno(stdout), _O_U16TEXT);
+	Gotoxy(0, y);
+	wcout << L"			 ██████╗ ██╗  ██╗    ███╗   ███╗██╗   ██╗     ██████╗  ██████╗ ██████╗ ██╗██╗" << endl;
+	wcout << L"			██╔═══██╗██║  ██║    ████╗ ████║╚██╗ ██╔╝    ██╔════╝ ██╔═══██╗██╔══██╗██║██║" << endl;
+	wcout << L"			██║   ██║███████║    ██╔████╔██║ ╚████╔╝     ██║  ███╗██║   ██║██║  ██║██║██║" << endl;
+	wcout << L"			██║   ██║██╔══██║    ██║╚██╔╝██║  ╚██╔╝      ██║   ██║██║   ██║██║  ██║╚═╝╚═╝" << endl;
+	wcout << L"			╚██████╔╝██║  ██║    ██║ ╚═╝ ██║   ██║       ╚██████╔╝╚██████╔╝██████╔╝██╗██╗" << endl;
+	wcout << L"			 ╚═════╝ ╚═╝  ╚═╝    ╚═╝     ╚═╝   ╚═╝        ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝╚═╝" << endl;
+
+	int wcoutmode = _setmode(_fileno(stdout), coutmode);
 }
 
 
