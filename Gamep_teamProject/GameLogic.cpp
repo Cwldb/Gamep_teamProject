@@ -33,6 +33,8 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	}
 	_pPlayer->position.tPos = _pPlayer->position.tStartPos;
 	_pPlayer->state = { 0 };
+	_pPlayer->survivedTimeOnGameOver = -1;
+	_pPlayer->startTime = time(0);
 }
 
 void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
@@ -240,13 +242,16 @@ void SpawnTile(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, int maxSpawn
 void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, PPLAYER _pPlayer, Scene& _eCurScene)
 {
 	auto& pos = _pPlayer->position.tPos;
-
 	char& curTile = _gameMap[pos.y][pos.x];
 	if (curTile == (char)Tile::DDONG)
 	{
 		system("cls");
 		_pPlayer->isGameOver = true;
 		_eCurScene = Scene::GAMEOVER;
+
+		if (_pPlayer->survivedTimeOnGameOver == -1)
+			_pPlayer->survivedTimeOnGameOver = time(0) - _pPlayer->startTime;
+
 		return;
 	}
 	if (curTile == (char)Tile::COIN)
@@ -310,12 +315,13 @@ void GameOverScene(Scene& _eCurScene, PPLAYER _pPlayer, int startTime, int survi
 	_pPlayer->isGameOver = true;
 	Key eKey = KeyController();
 
-	RenderGameOver(startTime, survivedTime);
+	RenderGameOver(startTime, _pPlayer->survivedTimeOnGameOver);
 
 	if (eKey == Key::ESC)
 	{
 		_eCurScene = Scene::TITLE;
 		system("cls");
+		_pPlayer->survivedTimeOnGameOver = -1;
 	}
 }
 

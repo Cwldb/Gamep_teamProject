@@ -31,6 +31,8 @@ typedef struct _player
     PLAYERPOS position;
     PLAYERSTATE state;
     bool isGameOver = false;
+    int survivedTimeOnGameOver = -1;
+    int startTime = 0;
 }PLAYER, * PPLAYER;
 
 typedef struct _tagDDONG
