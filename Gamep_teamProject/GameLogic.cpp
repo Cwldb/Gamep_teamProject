@@ -297,17 +297,17 @@ void InfoScene(Scene& _eCurScene, PPLAYER _pPlayer)
 
 void RenderInfo(PPLAYER _pPlayer)
 {
-	Gotoxy(47, 2);
-	cout << "조작법";
 	Gotoxy(47, 5);
+	cout << "조작법";
+	Gotoxy(47, 8);
 	cout << "양쪽 화살표로 좌우로 움직이기";
-	Gotoxy(47, 7);
+	Gotoxy(47, 10);
 	cout << "플레이어와 장애물이 닿으면 게임 OVER";
-	Gotoxy(47, 9);
+	Gotoxy(47, 12);
 	cout << "플레이어와 코인이 닿으면 점수 UP";
-	Gotoxy(47, 11);
-	cout << "똥이랑 코인 닿으면 사라집니다!!!";
 	Gotoxy(47, 14);
+	cout << "똥이랑 코인 닿으면 사라집니다!!!";
+	Gotoxy(47, 17);
 	cout << "ESC를 눌러서 타이틀로 돌아가기";
 }
 
