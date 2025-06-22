@@ -245,7 +245,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 	if (curTile == (char)Tile::DDONG)
 	{
 		system("cls");
-		_pPlayer->isGameOver == true;
+		_pPlayer->isGameOver = true;
 		_eCurScene = Scene::GAMEOVER;
 		return;
 	}
@@ -305,11 +305,13 @@ void RenderInfo(PPLAYER _pPlayer)
 	cout << _pPlayer->isGameOver;
 }
 
-void GameOverScene(Scene& _eCurScene, PPLAYER _pPlayer)
+void GameOverScene(Scene& _eCurScene, PPLAYER _pPlayer, int startTime, int survivedTime)
 {
-	_pPlayer->isGameOver == true;
+	_pPlayer->isGameOver = true;
 	Key eKey = KeyController();
-	RenderGameOver();
+
+	RenderGameOver(startTime, survivedTime);
+
 	if (eKey == Key::ESC)
 	{
 		_eCurScene = Scene::TITLE;
@@ -317,8 +319,7 @@ void GameOverScene(Scene& _eCurScene, PPLAYER _pPlayer)
 	}
 }
 
-
-void RenderGameOver()
+void RenderGameOver(int startTime, int survivedTime)
 {
 	COORD resolution = GetConsoleResolution();
 	int y = resolution.Y / 3;
@@ -330,8 +331,13 @@ void RenderGameOver()
 	wcout << L"			██║   ██║██╔══██║    ██║╚██╔╝██║  ╚██╔╝      ██║   ██║██║   ██║██║  ██║╚═╝╚═╝" << endl;
 	wcout << L"			╚██████╔╝██║  ██║    ██║ ╚═╝ ██║   ██║       ╚██████╔╝╚██████╔╝██████╔╝██╗██╗" << endl;
 	wcout << L"			 ╚═════╝ ╚═╝  ╚═╝    ╚═╝     ╚═╝   ╚═╝        ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝╚═╝" << endl;
-
 	int wcoutmode = _setmode(_fileno(stdout), coutmode);
+
+	Gotoxy(47, 20);
+	cout << "생존 시간 : " << survivedTime << "초";
+
+	Gotoxy(47, 22);
+	cout << "ESC를 눌러서 타이틀로 돌아가기";
 }
 
 
