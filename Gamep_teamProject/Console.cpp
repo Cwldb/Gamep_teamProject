@@ -1,4 +1,5 @@
 #include "Console.h"
+#include <Windows.h>
 
 void SetConsoleSettings(int _width, int _height, bool _isFullscreen, const std::wstring& _title)
 {
@@ -30,6 +31,19 @@ void SetLockResize()
 	LONG style = GetWindowLong(hwnd, GWL_STYLE);
 	style &= ~WS_SIZEBOX &~WS_MAXIMIZEBOX;
 	SetWindowLong(hwnd, GWL_STYLE, style);
+}
+
+//여기는 콘솔창 조절 못하게 하는 함수
+void DisableConsoleResize()
+{
+    HWND hWnd = GetConsoleWindow();
+    if (hWnd)
+    {
+        LONG style = GetWindowLong(hWnd, GWL_STYLE);
+        style &= ~WS_SIZEBOX;
+        style &= ~WS_MAXIMIZEBOX;
+        SetWindowLong(hWnd, GWL_STYLE, style);
+    }
 }
 
 COORD GetConsoleResolution()

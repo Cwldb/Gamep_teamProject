@@ -14,6 +14,7 @@ void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 {
 	//SetConsoleFont(L"NSimsun", { 20,20 }, FW_BOLD);
 	SetConsoleSettings(1000, 600, false, L"Catch Of Crush");
+	DisableConsoleResize();
 	SetCursorVisual(false, 50);
 	LoadStage(_gameMap);
 	PlayerInit(_gameMap, _pPlayer);
@@ -304,10 +305,10 @@ void RenderInfo(PPLAYER _pPlayer)
 	cout << "플레이어와 장애물이 닿으면 게임 OVER";
 	Gotoxy(47, 9);
 	cout << "플레이어와 코인이 닿으면 점수 UP";
+	Gotoxy(47, 11);
+	cout << "똥이랑 코인 닿으면 사라집니다!!!";
 	Gotoxy(47, 14);
 	cout << "ESC를 눌러서 타이틀로 돌아가기";
-	Gotoxy(47, 20);
-	cout << _pPlayer->isGameOver;
 }
 
 void GameOverScene(Scene& _eCurScene, PPLAYER _pPlayer, int startTime, int survivedTime)

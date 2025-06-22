@@ -14,7 +14,7 @@ using std::wstring;
 void SetConsoleSettings(int _width, int _height, bool _isFullscreen, const std::wstring& _title);
 void SetLockResize();
 COORD GetConsoleResolution();
-
+void DisableConsoleResize();
 
 void Gotoxy(int _x, int _y);
 BOOL IsGotoxy(int _x, int _y);
