@@ -50,7 +50,7 @@ Menu GetCurMenu()
 			x -= 35;
 			Gotoxy(x, y);
 			cout << "---------";
-			Sleep(40);
+			//Sleep(40);
 		}
 		break;
 	case Key::RIGHT:
@@ -61,7 +61,7 @@ Menu GetCurMenu()
 			x += 35;
 			Gotoxy(x, y);
 			cout << "---------";
-			Sleep(40);
+			//Sleep(40);
 		}
 		break;
 

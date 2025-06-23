@@ -43,4 +43,5 @@ int main()
 			break;
 		}
 	}
+	system("cls");
 }
