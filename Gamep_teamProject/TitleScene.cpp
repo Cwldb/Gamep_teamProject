@@ -35,38 +35,40 @@ void TitleSceneUpdate(Scene& _eCurScene)
 Menu GetCurMenu()
 {
 	COORD resolution = GetConsoleResolution();
-	int x = resolution.X / 3;
-	static int y = resolution.Y / 3 * 2;
-	static int originy = y;
+	static int x = resolution.X / 2 - 5;
+	static int originx = x;
+	int y = resolution.Y / 3 * 2 + 4;
 	Key eKey = KeyController();
 
 	switch (eKey)
 	{
-	case Key::UP:
-		if (y > originy)
+	case Key::LEFT:
+		if (x > originx - 35)
 		{
-			Gotoxy(x + 12, y);
-			cout << " ";
-			Gotoxy(x + 12, --y);
-			cout << ">";
+			Gotoxy(x, y);
+			cout << "          ";
+			x -= 35;
+			Gotoxy(x, y);
+			cout << "---------";
 			Sleep(40);
 		}
 		break;
-	case Key::DOWN:
-		if (y < originy + 2)
+	case Key::RIGHT:
+		if (x < originx + 35)
 		{
-			Gotoxy(x + 12, y);
-			cout << " ";
-			Gotoxy(x + 12, ++y);
-			cout << ">";
+			Gotoxy(x, y);
+			cout << "          ";
+			x += 35;
+			Gotoxy(x, y);
+			cout << "---------";
 			Sleep(40);
 		}
 		break;
 
 	case Key::SPACE:
-		if (originy == y) return Menu::START;
-		else if (originy + 1 == y) return Menu::INFO;
-		else  if (originy + 2 == y) return Menu::QUIT;
+		if (x == originx - 35) return Menu::START;
+		else if (x == originx) return Menu::INFO;
+		else if (x == originx + 35) return Menu::QUIT;
 		break;
 	}
 	return Menu::FAIL;
@@ -78,19 +80,19 @@ void TitleSceneRender()
 	int y = resolution.Y / 3;
 	Gotoxy(0, y);
 	int coutmode = _setmode(_fileno(stdout), _O_U16TEXT);
-	wcout << L"	 ██████╗ █████╗ ████████╗ ██████╗██╗  ██╗     ██████╗ ██████╗      ██████╗██████╗  █████╗ ███████╗██╗  ██╗" << endl;
-	wcout << L"	██╔════╝██╔══██╗╚══██╔══╝██╔════╝██║  ██║    ██╔═══██╗██╔══██╗    ██╔════╝██╔══██╗██╔══██╗██╔════╝██║  ██║" << endl;
-	wcout << L"	██║     ███████║   ██║   ██║     ███████║    ██║   ██║██████╔╝    ██║     ██████╔╝███████║███████╗███████║" << endl;
-	wcout << L"	██║     ██╔══██║   ██║   ██║     ██╔══██║    ██║   ██║██╔══██╗    ██║     ██╔══██╗██╔══██║╚════██║██╔══██║" << endl;
-	wcout << L"	╚██████╗██║  ██║   ██║   ╚██████╗██║  ██║    ╚██████╔╝██║  ██║    ╚██████╗██║  ██║██║  ██║███████║██║  ██║" << endl;
+	wcout << L"	 ██████╗ █████╗ ████████╗ ██████╗██╗  ██╗     ██████╗ ██████╗      ██████╗██████╗  █████╗ ███████╗██╗  ██╗ " << endl;
+	wcout << L"	██╔════╝██╔══██╗╚══██╔══╝██╔════╝██║  ██║    ██╔═══██╗██╔══██╗    ██╔════╝██╔══██╗██╔══██╗██╔════╝██║  ██║ " << endl;
+	wcout << L"	██║     ███████║   ██║   ██║     ███████║    ██║   ██║██████╔╝    ██║     ██████╔╝███████║███████╗███████║ " << endl;
+	wcout << L"	██║     ██╔══██║   ██║   ██║     ██╔══██║    ██║   ██║██╔══██╗    ██║     ██╔══██╗██╔══██║╚════██║██╔══██║ " << endl;
+	wcout << L"	╚██████╗██║  ██║   ██║   ╚██████╗██║  ██║    ╚██████╔╝██║  ██║    ╚██████╗██║  ██║██║  ██║███████║██║  ██║ " << endl;
 	wcout << L"	 ╚═════╝╚═╝  ╚═╝   ╚═╝    ╚═════╝╚═╝  ╚═╝     ╚═════╝ ╚═╝  ╚═╝     ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ " << endl;
 	int wcoutmode = _setmode(_fileno(stdout), coutmode);
-	int x = resolution.X / 3;
-	y = resolution.Y / 3 * 2;
-	Gotoxy(x + 15, y);
+	int x = resolution.X / 2 - 5;
+	y = resolution.Y / 3 * 2 + 3;
+	Gotoxy(x - 35, y);
 	cout << "게임 시작";
-	Gotoxy(x + 15, y + 1);
+	Gotoxy(x, y);
 	cout << "게임 정보";
-	Gotoxy(x + 15, y + 2);
+	Gotoxy(x + 35, y);
 	cout << "게임 종료";
 }
