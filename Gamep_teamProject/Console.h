@@ -20,13 +20,24 @@ void Gotoxy(int _x, int _y);
 BOOL IsGotoxy(int _x, int _y);
 COORD CursorPos();
 void SetCursorVisual(bool _isVis, DWORD _size);
-enum class COLOR
-{
-	BLACK, BLUE, GREEN, SKYBLUE, RED,
-	VOILET, YELLOW, LIGHT_GRAY, GRAY, LIGHT_BLUE,
-	LIGHT_GREEN, MINT, LIGHT_RED, LIGHT_VIOLET,
-	LIGHT_YELLOW, WHITE, END
+enum class COLOR {
+    BLACK = 0,
+    BLUE = 1,
+    GREEN = 2,
+    CYAN = 3,
+    RED = 4,
+    MAGENTA = 5,
+    BROWN = 6,
+    LIGHTGRAY = 7,
+    DARKGRAY = 8,
+    LIGHTBLUE = 9,
+    LIGHTGREEN = 10,
+    LIGHTCYAN = 11,
+    LIGHTRED = 12,
+    LIGHTMAGENTA = 13,
+    YELLOW = 14,
+    WHITE = 15
 };
-void SetColor(COLOR _textcolor =COLOR::WHITE, COLOR _bgcolor = COLOR::BLACK);
+void SetColor(COLOR _textcolor =COLOR::LIGHTGRAY, COLOR _bgcolor = COLOR::BLACK);
 void FrameSync(unsigned int _frame);
 void SetConsoleFont(LPCWSTR _fontname, COORD _size, UINT _weight);

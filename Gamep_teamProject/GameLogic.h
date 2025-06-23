@@ -54,7 +54,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 void InfoScene(Scene& _eCurScene, PPLAYER _pPlayer);
 void RenderInfo(PPLAYER _pPlayer);
 void GameOverScene(Scene& _eCurScene, PPLAYER _pPlayer, int startTime, int survivedTime);
-void RenderGameOver(int startTime, int survivedTime);
+void RenderGameOver(int survivedTime);
 
 void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
 void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);

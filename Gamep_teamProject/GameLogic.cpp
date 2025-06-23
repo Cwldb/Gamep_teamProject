@@ -84,25 +84,48 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, int _startTi
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
 			if (_pPlayer->position.tPos.x == j && _pPlayer->position.tPos.y == i)
-
+			{
+				SetColor(COLOR::LIGHTGREEN, COLOR::BLACK);
 				cout << "§";
+				SetColor();
+			}
+
 			else
 			{
 				if (_gameMap[i][j] == (char)Tile::BACK)
+				{
 					cout << "  ";
+				}
 				else if (_gameMap[i][j] == (char)Tile::WALL)
+				{
+					SetColor(COLOR::LIGHTGRAY, COLOR::BLACK);
 					cout << "■";
+					SetColor();
+				}
 				else if (_gameMap[i][j] == (char)Tile::START)
 					cout << "  ";
-				else if (_gameMap[i][j] == (char)Tile::DDONG)
+				else if (_gameMap[i][j] == (char)Tile::DDONG) 
+				{
+					SetColor(COLOR::BROWN, COLOR::BLACK);
 					cout << "♨";
+					SetColor();
+				}
 				else if (_gameMap[i][j] == (char)Tile::SPAWNDDONG)
+				{
+					SetColor(COLOR::RED, COLOR::BLACK);
 					cout << "※";
+					SetColor();
+				}
+
 				else if (_gameMap[i][j] == (char)Tile::FLOOR)
+				{
+					SetColor(COLOR::LIGHTGRAY, COLOR::BLACK);
 					cout << "■";
+					SetColor();
+				}
 				else if (_gameMap[i][j] == (char)Tile::COIN)
 				{
-					SetColor(COLOR::LIGHT_YELLOW, COLOR::BLACK);
+					SetColor(COLOR::YELLOW, COLOR::BLACK);
 					cout << "㉧";
 					SetColor();
 				}
@@ -124,6 +147,7 @@ void RenderUI(PPLAYER _pPlayer, int _startTime)
 	COORD consoleSize = GetConsoleResolution();
 	int x = consoleSize.X / 2;
 	int y = 5;
+	int timer = _startTime - time(0);
 
 	Gotoxy(x, y++);
 	cout << "--------------------";
@@ -131,7 +155,7 @@ void RenderUI(PPLAYER _pPlayer, int _startTime)
 	Gotoxy(x, y++);
 	cout << "  현재 골드 : " << _pPlayer->state.coinCnt;
 	Gotoxy(x, y++);
-	cout << "  남은 시간 : " << _startTime - time(0)<< "초";
+	cout << "  남은 시간 : " << timer << "초";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
 	cout << "--------------------";
@@ -158,10 +182,10 @@ void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH])
 	strcpy_s(_gameMap[16], "100000000000000000001");
 	strcpy_s(_gameMap[17], "100000000000000000001");
 	strcpy_s(_gameMap[18], "100000000000000000001");
-	strcpy_s(_gameMap[19], "100000000020000000001");
+	strcpy_s(_gameMap[19], "100000000000000000001");
 	strcpy_s(_gameMap[20], "100000000000000000001");
 	strcpy_s(_gameMap[21], "100000000000000000001");
-	strcpy_s(_gameMap[22], "100000000000000000001");
+	strcpy_s(_gameMap[22], "100000000020000000001");
 	strcpy_s(_gameMap[23], "155555555555555555551");
 }
 
@@ -316,7 +340,7 @@ void GameOverScene(Scene& _eCurScene, PPLAYER _pPlayer, int startTime, int survi
 	_pPlayer->isGameOver = true;
 	Key eKey = KeyController();
 
-	RenderGameOver(startTime, _pPlayer->survivedTimeOnGameOver);
+	RenderGameOver(_pPlayer->survivedTimeOnGameOver);
 
 	if (eKey == Key::ESC)
 	{
@@ -326,7 +350,7 @@ void GameOverScene(Scene& _eCurScene, PPLAYER _pPlayer, int startTime, int survi
 	}
 }
 
-void RenderGameOver(int startTime, int survivedTime)
+void RenderGameOver(int survivedTime)
 {
 	COORD resolution = GetConsoleResolution();
 	int y = resolution.Y / 3;
