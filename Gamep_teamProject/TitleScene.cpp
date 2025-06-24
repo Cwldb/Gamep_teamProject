@@ -10,7 +10,7 @@ void TitleScene(Scene& _eCurScene)
 	if (_eCurScene != Scene::TITLE)
 		return;
 	TitleSceneRender();
-	Sleep(60);
+	Sleep(20);
 }
 
 void TitleSceneUpdate(Scene& _eCurScene)
@@ -35,7 +35,7 @@ void TitleSceneUpdate(Scene& _eCurScene)
 Menu GetCurMenu()
 {
 	COORD resolution = GetConsoleResolution();
-	static int x = resolution.X / 2 - 5;
+	static int x = resolution.X / 2 - 6;
 	static int originx = x;
 	int y = resolution.Y / 3 * 2 + 4;
 	Key eKey = KeyController();
@@ -43,32 +43,43 @@ Menu GetCurMenu()
 	switch (eKey)
 	{
 	case Key::LEFT:
-		if (x > originx - 35)
+		if (x > originx - 25)
 		{
+			Gotoxy(x - 2, y - 1);
+			cout << " ";
+			Gotoxy(x - 2, y);
+			cout << "             ";
+			x -= 25;
 			Gotoxy(x, y);
-			cout << "          ";
-			x -= 35;
-			Gotoxy(x, y);
-			cout << "---------";
-			//Sleep(40);
+			int coutmode = _setmode(_fileno(stdout), _O_U16TEXT);
+			Gotoxy(x - 2, y - 1);
+			wcout << L"☞";
+			Gotoxy(x - 2, y);
+			wcout << L"⚊⚊⚊⚊⚊⚊⚊⚊⚊⚊⚊⚊⚊";
+			int wcoutmode = _setmode(_fileno(stdout), coutmode);
 		}
 		break;
 	case Key::RIGHT:
-		if (x < originx + 35)
+		if (x < originx + 25)
 		{
-			Gotoxy(x, y);
-			cout << "          ";
-			x += 35;
-			Gotoxy(x, y);
-			cout << "---------";
-			//Sleep(40);
+			Gotoxy(x - 2, y - 1);
+			cout << " ";
+			Gotoxy(x - 2, y);
+			cout << "              ";
+			x += 25;
+			int coutmode = _setmode(_fileno(stdout), _O_U16TEXT);
+			Gotoxy(x - 2, y - 1);
+			wcout << L"☞";
+;			Gotoxy(x - 2, y);
+			wcout << L"⚊⚊⚊⚊⚊⚊⚊⚊⚊⚊⚊⚊⚊";
+			int wcoutmode = _setmode(_fileno(stdout), coutmode);
 		}
 		break;
 
 	case Key::SPACE:
-		if (x == originx - 35) return Menu::START;
+		if (x == originx - 25) return Menu::START;
 		else if (x == originx) return Menu::INFO;
-		else if (x == originx + 35) return Menu::QUIT;
+		else if (x == originx + 25) return Menu::QUIT;
 		break;
 	}
 	return Menu::FAIL;
@@ -89,10 +100,10 @@ void TitleSceneRender()
 	int wcoutmode = _setmode(_fileno(stdout), coutmode);
 	int x = resolution.X / 2 - 5;
 	y = resolution.Y / 3 * 2 + 3;
-	Gotoxy(x - 35, y);
-	cout << "게임 시작";
+	Gotoxy(x - 25, y);
+	cout << "게임시작";
 	Gotoxy(x, y);
-	cout << "게임 정보";
-	Gotoxy(x + 35, y);
-	cout << "게임 종료";
+	cout << "게임정보";
+	Gotoxy(x + 25, y);
+	cout << "게임종료";
 }

@@ -9,7 +9,7 @@ Key KeyController()
     auto now = steady_clock::now();
     auto elapsed = duration_cast<milliseconds>(now - lastInputTime).count();
 
-    int inputDelay = 60;
+    int inputDelay = 100;
 
     if (elapsed < inputDelay)
         return Key::FAIL;
