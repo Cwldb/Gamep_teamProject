@@ -1,6 +1,8 @@
 #include "TitleScene.h"
 #include "GameLogic.h"
 #include <iostream>
+#include <mutex>
+std::once_flag flag;
 using std::cout;
 using std::endl;
 
@@ -9,7 +11,7 @@ int main()
 	char gameMap[MAP_HEIGHT][MAP_WIDTH] = {};
 	Scene curScene = Scene::TITLE;
 	PLAYER player;
-	int startTime = 60 + time(0);
+	int startTime = 65 + time(0);
 	int survivedTime = 0;
 	vector<DDONG> vecDDONG;
 	Init(gameMap, &player);
@@ -30,6 +32,9 @@ int main()
 				player.isGameOver = false;
 			}
 			if (!player.isGameOver) {
+				std::call_once(flag, []() { //메서드를 단 한번만 실행하게 하는 거에요
+					CountDown();
+					});
 				GameScene(curScene, gameMap, &player, vecDDONG, startTime);
 			}
 			break;
@@ -43,6 +48,9 @@ int main()
 			break;
 		case Scene::CLEAR:
 			ClearScene(curScene, &player);
+			std::call_once(flag, []() { //메서드를 단 한번만 실행하게 하는 거에요
+				CountDown();
+				});
 		}
 	}
 	system("cls");
