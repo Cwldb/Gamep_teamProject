@@ -133,7 +133,7 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, int _startTi
 		}
 		cout << endl;
 	}
-	RenderUI(_pPlayer, _startTime);
+	RenderUI(_pPlayer, _startTime, _eCurScene);
 
 	if (_eCurScene == Scene::GAMEOVER)
 	{
@@ -142,12 +142,17 @@ void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, int _startTi
 	}
 }
 
-void RenderUI(PPLAYER _pPlayer, int _startTime)
+void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 {
 	COORD consoleSize = GetConsoleResolution();
 	int x = consoleSize.X / 2;
 	int y = 5;
 	int timer = _startTime - time(0);
+	if (timer == 0)
+	{
+		system("cls");
+		_eCurScene = Scene::CLEAR;
+	}
 
 	Gotoxy(x, y++);
 	cout << "--------------------";
@@ -196,6 +201,22 @@ void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER 
 	Gotoxy(0, 0);
 	Render(_gameMap, _pPlayer, _startTime, _eCurScene);
 	FrameSync(30);
+}
+
+void ClearScene(Scene& _eCurScene, PPLAYER _pPlayer)
+{
+	_eCurScene = Scene::CLEAR;
+	COORD resolution = GetConsoleResolution();
+	int y = resolution.Y / 3;
+	int coutmode = _setmode(_fileno(stdout), _O_U16TEXT);
+	Gotoxy(0, y);
+		wcout << L"███████╗████████╗ █████╗  ██████╗ ███████╗     ██████╗██╗     ███████╗ █████╗ ██████╗ " << endl;
+		wcout << L"██╔════╝╚══██╔══╝██╔══██╗██╔════╝ ██╔════╝    ██╔════╝██║     ██╔════╝██╔══██╗██╔══██╗" << endl;
+		wcout << L"███████╗   ██║   ███████║██║  ███╗█████╗      ██║     ██║     █████╗  ███████║██████╔╝" << endl;
+		wcout << L"╚════██║   ██║   ██╔══██║██║   ██║██╔══╝      ██║     ██║     ██╔══╝  ██╔══██║██╔══██╗" << endl;
+		wcout << L"███████║   ██║   ██║  ██║╚██████╔╝███████╗    ╚██████╗███████╗███████╗██║  ██║██║  ██║" << endl;
+		wcout << L"╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝     ╚═════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝" << endl;
+	int wcoutmode = _setmode(_fileno(stdout), coutmode);
 }
 
 void ClearBottomRow(char _gameMap[MAP_HEIGHT][MAP_WIDTH])
@@ -296,7 +317,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 		MoveTileDown(_gameMap, (char)Tile::DDONG);
 		MoveTileDown(_gameMap, (char)Tile::COIN, (char)Tile::FLOOR);
 
-		int dropCount = rand() % 3;
+		int dropCount = rand() % 5;
 		SpawnTile(_gameMap, (char)Tile::DDONG, dropCount);
 	}
 

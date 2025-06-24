@@ -41,6 +41,8 @@ int main()
 			if (survivedTime < 0) survivedTime = 0;
 			GameOverScene(curScene, &player, startTime, survivedTime);
 			break;
+		case Scene::CLEAR:
+			ClearScene(curScene, &player);
 		}
 	}
 	system("cls");
