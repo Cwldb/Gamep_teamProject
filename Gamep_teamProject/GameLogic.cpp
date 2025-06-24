@@ -7,6 +7,9 @@
 #include <Windows.h>
 #include <io.h>
 #include <fcntl.h>
+#include<conio.h>
+
+
 
 int g_ddongFrame = 0;
 
@@ -37,6 +40,16 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	_pPlayer->survivedTimeOnGameOver = -1;
 	_pPlayer->startTime = time(0);
 }
+
+void GameInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG> vecDDONG, PPLAYER _pPlayer)
+{
+	memset(_gameMap, 0, sizeof(_gameMap));
+	vecDDONG.clear();
+	Init(_gameMap, _pPlayer);
+	_pPlayer->startTime = 60 + time(0);
+}
+
+
 
 void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 {
@@ -148,7 +161,7 @@ void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 	int x = consoleSize.X / 2;
 	int y = 5;
 	int timer = _startTime - time(0);
-	if (timer == 0)
+	if (timer == 50 || _pPlayer->state.coinCnt == 5)
 	{
 		system("cls");
 		_eCurScene = Scene::CLEAR;
@@ -206,17 +219,35 @@ void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER 
 void ClearScene(Scene& _eCurScene, PPLAYER _pPlayer)
 {
 	_eCurScene = Scene::CLEAR;
+	Key eKey = KeyController();
+	RenderClearScene(_pPlayer);
+
+	if (eKey == Key::SPACE)
+	{
+		_eCurScene = Scene::GAME;
+		system("cls");
+		_pPlayer->survivedTimeOnGameOver = -1;
+	}
+}
+
+void RenderClearScene(PPLAYER _pPlayer)
+{
+	system("cls");
 	COORD resolution = GetConsoleResolution();
 	int y = resolution.Y / 3;
 	int coutmode = _setmode(_fileno(stdout), _O_U16TEXT);
 	Gotoxy(0, y);
-		wcout << L"███████╗████████╗ █████╗  ██████╗ ███████╗     ██████╗██╗     ███████╗ █████╗ ██████╗ " << endl;
-		wcout << L"██╔════╝╚══██╔══╝██╔══██╗██╔════╝ ██╔════╝    ██╔════╝██║     ██╔════╝██╔══██╗██╔══██╗" << endl;
-		wcout << L"███████╗   ██║   ███████║██║  ███╗█████╗      ██║     ██║     █████╗  ███████║██████╔╝" << endl;
-		wcout << L"╚════██║   ██║   ██╔══██║██║   ██║██╔══╝      ██║     ██║     ██╔══╝  ██╔══██║██╔══██╗" << endl;
-		wcout << L"███████║   ██║   ██║  ██║╚██████╔╝███████╗    ╚██████╗███████╗███████╗██║  ██║██║  ██║" << endl;
-		wcout << L"╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝     ╚═════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝" << endl;
+		wcout << L"		███████╗████████╗ █████╗  ██████╗ ███████╗     ██████╗██╗     ███████╗ █████╗ ██████╗ " << endl;
+		wcout << L"		██╔════╝╚══██╔══╝██╔══██╗██╔════╝ ██╔════╝    ██╔════╝██║     ██╔════╝██╔══██╗██╔══██╗" << endl;
+		wcout << L"		███████╗   ██║   ███████║██║  ███╗█████╗      ██║     ██║     █████╗  ███████║██████╔╝" << endl;
+		wcout << L"		╚════██║   ██║   ██╔══██║██║   ██║██╔══╝      ██║     ██║     ██╔══╝  ██╔══██║██╔══██╗" << endl;
+		wcout << L"		███████║   ██║   ██║  ██║╚██████╔╝███████╗    ╚██████╗███████╗███████╗██║  ██║██║  ██║" << endl;
+		wcout << L"		╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝     ╚═════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝" << endl;
 	int wcoutmode = _setmode(_fileno(stdout), coutmode);
+
+	Gotoxy(37, 20);	
+	cout << "스페이스바를 눌러서 다음 스테이지로 이동하기";
+
 }
 
 void ClearBottomRow(char _gameMap[MAP_HEIGHT][MAP_WIDTH])
@@ -284,6 +315,8 @@ void SpawnTile(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, int maxSpawn
 		}
 	}
 }
+
+
 
 void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, PPLAYER _pPlayer, Scene& _eCurScene)
 {
@@ -392,4 +425,18 @@ void RenderGameOver(int survivedTime)
 	cout << "ESC를 눌러서 타이틀로 돌아가기";
 }
 
+void CountDown()
+{
+	for (int i = 3; i >= 1; --i) {
+		cout << i;
+		for (int j = 0; j < 9; ++j) {
+			cout << ".";
+			Sleep(100);
+		}
+		system("cls");
+		cout << endl;
+
+		system("cls");
+	}
+}
 
