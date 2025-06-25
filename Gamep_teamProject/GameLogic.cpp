@@ -261,7 +261,8 @@ void MoveTileDown(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, char newT
 			if (_gameMap[i][j] == tileType)
 			{
 				char& below = _gameMap[i + 1][j];
-				if (below == (char)Tile::BACK || below == (char)Tile::START || below == (char)Tile::COIN)
+
+				if (below == (char)Tile::BACK || below == (char)Tile::START)
 				{
 					below = tileType;
 					_gameMap[i][j] = (char)Tile::BACK;
@@ -345,7 +346,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 		MoveTileDown(_gameMap, (char)Tile::DDONG);
 		MoveTileDown(_gameMap, (char)Tile::COIN, (char)Tile::FLOOR);
 
-		int dropCount = rand() % 5;
+		int dropCount = rand() % 3;
 		SpawnTile(_gameMap, (char)Tile::DDONG, dropCount);
 	}
 
