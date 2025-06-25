@@ -31,6 +31,7 @@ typedef struct _player
     PLAYERPOS position;
     PLAYERSTATE state;
     bool isGameOver = false;
+    bool isClear = false;
     int survivedTimeOnGameOver = -1;
     int startTime = 0;
 }PLAYER, * PPLAYER;
@@ -44,7 +45,6 @@ typedef struct _tagDDONG
 
 void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
 void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
-void GameInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG> vecDDONG, PPLAYER _pPlayer);
 void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer);
 
 void Update(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG, Scene& _eCurScene);

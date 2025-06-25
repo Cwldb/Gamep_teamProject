@@ -41,13 +41,7 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	_pPlayer->startTime = time(0);
 }
 
-void GameInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG> vecDDONG, PPLAYER _pPlayer)
-{
-	memset(_gameMap, 0, sizeof(_gameMap));
-	vecDDONG.clear();
-	Init(_gameMap, _pPlayer);
-	_pPlayer->startTime = 60 + time(0);
-}
+
 
 
 
@@ -161,10 +155,12 @@ void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 	int x = consoleSize.X / 2;
 	int y = 5;
 	int timer = _startTime - time(0);
-	if (timer == 50 || _pPlayer->state.coinCnt == 5)
+	if (timer == 0 || _pPlayer->state.coinCnt == 5)
 	{
 		system("cls");
 		_eCurScene = Scene::CLEAR;
+		_pPlayer->isClear = true;
+		return;
 	}
 
 	Gotoxy(x, y++);
@@ -218,9 +214,9 @@ void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER 
 
 void ClearScene(Scene& _eCurScene, PPLAYER _pPlayer)
 {
+	RenderClearScene(_pPlayer);
 	_eCurScene = Scene::CLEAR;
 	Key eKey = KeyController();
-	RenderClearScene(_pPlayer);
 
 	if (eKey == Key::SPACE)
 	{
@@ -232,7 +228,6 @@ void ClearScene(Scene& _eCurScene, PPLAYER _pPlayer)
 
 void RenderClearScene(PPLAYER _pPlayer)
 {
-	system("cls");
 	COORD resolution = GetConsoleResolution();
 	int y = resolution.Y / 3;
 	int coutmode = _setmode(_fileno(stdout), _O_U16TEXT);

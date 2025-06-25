@@ -19,6 +19,7 @@ void TitleSceneUpdate(Scene& _eCurScene)
 	switch (eMenu)
 	{
 	case Menu::START:
+		EnterAnimation();
 		_eCurScene = Scene::GAME;
 		system("cls");
 		break;
@@ -73,6 +74,70 @@ Menu GetCurMenu()
 	}
 	return Menu::FAIL;
 }
+
+void EnterAnimation()
+{
+	COORD resolution = GetConsoleResolution();
+	int delaytime = 20;
+	int flashCnt = 5;
+	FlashAnimation(resolution, flashCnt, delaytime);
+	CrossAnimation(resolution, delaytime);
+	//SetColor(COLOR::WHITE, COLOR::MINT);
+	system("cls");
+}
+
+void FlashAnimation(COORD _resolution, int _cnt, int _delaytime)
+{
+	for (int c = 0; c < _cnt; ++c)
+	{
+		SetColor(COLOR::BLACK, COLOR::WHITE);
+		system("cls");
+		Sleep(_delaytime);
+		SetColor();
+		system("cls");
+		/*SetColor(COLOR::BLACK, COLOR::WHITE);
+		for (int i = 0; i < _resolution.Y; ++i)
+		{
+			for (int j = 0; j < _resolution.X / 2; ++j)
+			{
+				cout << "  ";
+			}
+			cout << endl;
+		}
+		Sleep(_delaytime);
+		Gotoxy(0, 0);
+		SetColor();
+		for (int i = 0; i < _resolution.Y; ++i)
+		{
+			for (int j = 0; j < _resolution.X / 2; ++j)
+			{
+				cout << "  ";
+			}
+			cout << endl;
+		}*/
+	}
+}
+
+void CrossAnimation(COORD _resolution, int _delaytime)
+{
+	SetColor(COLOR::BLACK, COLOR::WHITE);
+	for (int i = 0; i < _resolution.X / 2; ++i)
+	{
+		for (int j = 0; j < _resolution.Y; j += 2)
+		{
+			Gotoxy(i * 2, j);
+			cout << "  ";
+		}
+		for (int j = 1; j < _resolution.Y; j += 2)
+		{
+			Gotoxy(_resolution.X - 2 - i * 2, j);
+			cout << "  ";
+		}
+		Sleep(_delaytime);
+	}
+	SetColor();
+}
+
 
 void TitleSceneRender()
 {
