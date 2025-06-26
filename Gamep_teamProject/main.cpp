@@ -11,7 +11,7 @@ int main()
 	char gameMap[MAP_HEIGHT][MAP_WIDTH] = {};
 	Scene curScene = Scene::TITLE;
 	PLAYER player;
-	int startTime = 65  + time(0);
+	int startTime = 62  + time(0);
 	int survivedTime = 0;
 	vector<DDONG> vecDDONG;
 	Init(gameMap, &player);
@@ -32,9 +32,6 @@ int main()
 				player.isGameOver = false;
 			}
 			if (!player.isGameOver) {
-				std::call_once(flag, []() { //메서드를 단 한번만 실행하게 하는 거에요
-					CountDown();
-					});
 				GameScene(curScene, gameMap, &player, vecDDONG, startTime);
 			}
 			break;
@@ -51,7 +48,6 @@ int main()
 			std::call_once(flag, []()//메서드를 단 한번만 실행하게 하는 거에요
 			{
 				system("cls");
-				CountDown();
 			});
 			break;
 		}

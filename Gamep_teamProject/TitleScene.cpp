@@ -89,7 +89,7 @@ Menu GetCurMenu()
 void EnterAnimation()
 {
 	COORD resolution = GetConsoleResolution();
-	int delaytime = 20;
+	int delaytime = 8;
 	int flashCnt = 5;
 	FlashAnimation(resolution, flashCnt, delaytime);
 	CrossAnimation(resolution, delaytime);

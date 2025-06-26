@@ -17,6 +17,7 @@ typedef struct _pos
 typedef struct _playerstate
 {
     int coinCnt;
+    int roundCnt;
 }PLAYERSTATE, * PPLAYERSTATE;
 
 typedef struct _playerpos
@@ -66,4 +67,3 @@ void ClearScene(Scene& _eCurScene, PPLAYER _pPlayer);
 void ClearBottomRow(char _gameMap[MAP_HEIGHT][MAP_WIDTH]);
 void MoveTileDown(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, char newType = 0);
 void SpawnTile(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, int maxSpawn);
-void CountDown();

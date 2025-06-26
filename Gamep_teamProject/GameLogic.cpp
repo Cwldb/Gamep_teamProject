@@ -157,7 +157,6 @@ void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 	int timer = _startTime - time(0);
 	if (timer == 0 || _pPlayer->state.coinCnt == 5)
 	{
-		system("cls");
 		_eCurScene = Scene::CLEAR;
 		_pPlayer->isClear = true;
 		return;
@@ -167,9 +166,12 @@ void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 	cout << "--------------------";
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
-	cout << "  현재 골드 : " << _pPlayer->state.coinCnt;
+	cout << "  현재 라운드  : " << _pPlayer->state.roundCnt;
+	Gotoxy(x, y++);
 	Gotoxy(x, y++);
 	cout << "  남은 시간 : " << timer << "초";
+	Gotoxy(x, y++);
+	cout << "  현재 골드 : " << _pPlayer->state.coinCnt;
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
 	cout << "--------------------";
@@ -421,18 +423,5 @@ void RenderGameOver(int survivedTime)
 	cout << "ESC를 눌러서 타이틀로 돌아가기";
 }
 
-void CountDown()
-{
-	for (int i = 3; i >= 1; --i) {
-		cout << i;
-		for (int j = 0; j < 9; ++j) {
-			cout << ".";
-			Sleep(100);
-		}
-		system("cls");
-		cout << endl;
 
-		system("cls");
-	}
-}
 
