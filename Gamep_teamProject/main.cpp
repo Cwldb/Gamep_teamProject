@@ -1,5 +1,6 @@
 ﻿#include "TitleScene.h"
 #include "GameLogic.h"
+#include "Mci.h"
 #include <iostream>
 #include <mutex>
 
@@ -13,6 +14,12 @@ int main()
 	Scene curScene = Scene::TITLE;
 	PLAYER player;
 	vector<DDONG> vecDDONG;
+
+	if (!InitAllSounds())
+	{
+		cout << "사운드 초기화 실패!";
+		//return;
+	}
 
 	Init(gameMap, &player);
 
@@ -70,4 +77,5 @@ int main()
 		}
 	}
 	system("cls");
+	ReleaseAllSounds();
 }

@@ -7,15 +7,15 @@
 #include <Windows.h>
 #include <io.h>
 #include <fcntl.h>
-#include<conio.h>
-#include <mutex>
+#include "Mci.h"
 std::once_flag clearFlag;
 
 int g_ddongFrame = 0;
 
 void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 {
-	//SetConsoleFont(L"NSimsun", { 20,20 }, FW_BOLD);
+	
+	//PlaySoundID(SOUNDID::GAMESTART);
 	SetConsoleSettings(1000, 600, false, L"Catch Of Crush");
 	DisableConsoleResize();
 	SetCursorVisual(false, 50);
@@ -172,6 +172,7 @@ void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 	if (_pPlayer->state.roundCnt >= 1 && timer == 0)
 	{
 		system("cls");
+		PlaySoundID(SOUNDID::GAMEOVER);
 		_pPlayer->isGameOver = true;
 		_eCurScene = Scene::GAMEOVER;
 
@@ -360,6 +361,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 	if (curTile == (char)Tile::DDONG)
 	{
 		system("cls");
+		PlaySoundID(SOUNDID::HIT);
 		_pPlayer->isGameOver = true;
 		_eCurScene = Scene::GAMEOVER;
 
@@ -372,6 +374,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 	if (curTile == (char)Tile::COIN)
 	{
 		_pPlayer->state.coinCnt++;
+		PlaySoundID(SOUNDID::COIN);
 		curTile = (char)Tile::BACK;
 	}
 
