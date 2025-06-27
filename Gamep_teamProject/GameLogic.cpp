@@ -9,8 +9,6 @@
 #include <fcntl.h>
 #include<conio.h>
 
-
-
 int g_ddongFrame = 0;
 
 void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
@@ -19,7 +17,7 @@ void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	SetConsoleSettings(1000, 600, false, L"Catch Of Crush");
 	DisableConsoleResize();
 	SetCursorVisual(false, 50);
-	LoadStage(_gameMap);
+	LoadStage(_gameMap, _pPlayer->state.roundCnt);
 	PlayerInit(_gameMap, _pPlayer);
 }
 
@@ -29,17 +27,20 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	{
 		for (int j = 0; j < MAP_WIDTH; ++j)
 		{
-			// 맵 데이터에 의해 플레이어 세팅
 			if (_gameMap[i][j] == (char)Tile::START)
 				_pPlayer->position.tStartPos = { j, i };
-
 		}
 	}
 	_pPlayer->position.tPos = _pPlayer->position.tStartPos;
+
+	int roundBackup = _pPlayer->state.roundCnt;
+
 	_pPlayer->state = { 0 };
+	_pPlayer->state.roundCnt = roundBackup;
+
 	_pPlayer->survivedTimeOnGameOver = -1;
-	_pPlayer->startTime = time(0);
 }
+
 
 
 
@@ -155,7 +156,10 @@ void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 	int x = consoleSize.X / 2;
 	int y = 5;
 	int timer = _startTime - time(0);
-	if (timer == 0 || _pPlayer->state.coinCnt == 5)
+
+	int requiredCoin = _pPlayer->state.roundCnt * 5;
+
+	if (timer == 0 || _pPlayer->state.coinCnt >= requiredCoin)
 	{
 		_eCurScene = Scene::CLEAR;
 		_pPlayer->isClear = true;
@@ -165,19 +169,18 @@ void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 	Gotoxy(x, y++);
 	cout << "--------------------";
 	Gotoxy(x, y++);
-	Gotoxy(x, y++);
 	cout << "  현재 라운드  : " << _pPlayer->state.roundCnt;
 	Gotoxy(x, y++);
 	Gotoxy(x, y++);
 	cout << "  남은 시간 : " << timer << "초";
 	Gotoxy(x, y++);
-	cout << "  현재 골드 : " << _pPlayer->state.coinCnt;
-	Gotoxy(x, y++);
+	cout << "  현재 골드 : " << _pPlayer->state.coinCnt << " / " << requiredCoin;
 	Gotoxy(x, y++);
 	cout << "--------------------";
 }
 
-void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH])
+
+void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH], int round)
 {
 	strcpy_s(_gameMap[0], "133333333333333333331");
 	strcpy_s(_gameMap[1], "100000000000000000001");
@@ -212,21 +215,32 @@ void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER 
 	Gotoxy(0, 0);
 	Render(_gameMap, _pPlayer, _startTime, _eCurScene);
 	FrameSync(30);
+	if (_eCurScene == Scene::CLEAR)
+	{
+		ClearScene(_gameMap, _eCurScene, _pPlayer);
+	}
+
 }
 
-void ClearScene(Scene& _eCurScene, PPLAYER _pPlayer)
+void ClearScene(char _gameMap[MAP_HEIGHT][MAP_WIDTH], Scene& _eCurScene, PPLAYER _pPlayer)
 {
 	RenderClearScene(_pPlayer);
-	_eCurScene = Scene::CLEAR;
 	Key eKey = KeyController();
 
 	if (eKey == Key::SPACE)
 	{
+		_pPlayer->state.roundCnt++;
+		_pPlayer->state.coinCnt = 0;
+		_pPlayer->isClear = false;
+
+		LoadStage(_gameMap, _pPlayer->state.roundCnt);
+		PlayerInit(_gameMap, _pPlayer);
+
 		_eCurScene = Scene::GAME;
 		system("cls");
-		_pPlayer->survivedTimeOnGameOver = -1;
 	}
 }
+
 
 void RenderClearScene(PPLAYER _pPlayer)
 {
@@ -320,6 +334,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 {
 	auto& pos = _pPlayer->position.tPos;
 	char& curTile = _gameMap[pos.y][pos.x];
+
 	if (curTile == (char)Tile::DDONG)
 	{
 		system("cls");
@@ -331,6 +346,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 
 		return;
 	}
+
 	if (curTile == (char)Tile::COIN)
 	{
 		_pPlayer->state.coinCnt++;
@@ -348,7 +364,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 		MoveTileDown(_gameMap, (char)Tile::DDONG);
 		MoveTileDown(_gameMap, (char)Tile::COIN, (char)Tile::FLOOR);
 
-		int dropCount = rand() % 3;
+		int dropCount = rand() % (2 + _pPlayer->state.roundCnt);
 		SpawnTile(_gameMap, (char)Tile::DDONG, dropCount);
 	}
 
@@ -360,16 +376,6 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 	}
 }
 
-void InfoScene(Scene& _eCurScene, PPLAYER _pPlayer)
-{
-	Key eKey = KeyController();
-	RenderInfo(_pPlayer);
-	if (eKey == Key::ESC)
-	{
-		_eCurScene = Scene::TITLE;
-		system("cls");
-	}
-}
 
 void RenderInfo(PPLAYER _pPlayer)
 {
@@ -385,6 +391,19 @@ void RenderInfo(PPLAYER _pPlayer)
 	cout << "똥이랑 코인 닿으면 사라집니다!!!";
 	Gotoxy(47, 17);
 	cout << "ESC를 눌러서 타이틀로 돌아가기";
+}
+
+void InfoScene(Scene& _eCurScene, PPLAYER _pPlayer)
+{
+	Key eKey = KeyController();
+
+	RenderInfo(_pPlayer);
+
+	if (eKey == Key::ESC)
+	{
+		_eCurScene = Scene::TITLE;
+		system("cls");
+	}
 }
 
 void GameOverScene(Scene& _eCurScene, PPLAYER _pPlayer, int startTime, int survivedTime)
@@ -422,6 +441,3 @@ void RenderGameOver(int survivedTime)
 	Gotoxy(47, 22);
 	cout << "ESC를 눌러서 타이틀로 돌아가기";
 }
-
-
-

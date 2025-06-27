@@ -17,7 +17,7 @@ typedef struct _pos
 typedef struct _playerstate
 {
     int coinCnt;
-    int roundCnt;
+    int roundCnt = 0;
 }PLAYERSTATE, * PPLAYERSTATE;
 
 typedef struct _playerpos
@@ -54,7 +54,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 
 void Render(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, int _startTime , Scene& _eCurScene);
 void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene);
-void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH]);
+void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH], int round);
 void RenderInfo(PPLAYER _pPlayer);
 void RenderGameOver(int survivedTime);
 void RenderClearScene(PPLAYER _pPlayer);
@@ -62,7 +62,7 @@ void RenderClearScene(PPLAYER _pPlayer);
 void InfoScene(Scene& _eCurScene, PPLAYER _pPlayer);
 void GameOverScene(Scene& _eCurScene, PPLAYER _pPlayer, int startTime, int survivedTime);
 void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer, vector<DDONG> vecDDONG, int _startTime);
-void ClearScene(Scene& _eCurScene, PPLAYER _pPlayer);
+void ClearScene(char _gameMap[MAP_HEIGHT][MAP_WIDTH],Scene& _eCurScene, PPLAYER _pPlayer);
 
 void ClearBottomRow(char _gameMap[MAP_HEIGHT][MAP_WIDTH]);
 void MoveTileDown(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, char newType = 0);

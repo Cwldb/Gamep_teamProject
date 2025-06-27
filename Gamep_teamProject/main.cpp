@@ -32,6 +32,10 @@ int main()
 				player.isGameOver = false;
 			}
 			if (!player.isGameOver) {
+				std::call_once(flag, []()//메서드를 단 한번만 실행하게 하는 거에요
+					{
+						system("cls");
+					});
 				GameScene(curScene, gameMap, &player, vecDDONG, startTime);
 			}
 			break;
@@ -44,7 +48,7 @@ int main()
 			GameOverScene(curScene, &player, startTime, survivedTime);
 			break;
 		case Scene::CLEAR:
-			ClearScene(curScene, &player);
+			ClearScene(gameMap, curScene, &player);
 			std::call_once(flag, []()//메서드를 단 한번만 실행하게 하는 거에요
 			{
 				system("cls");
