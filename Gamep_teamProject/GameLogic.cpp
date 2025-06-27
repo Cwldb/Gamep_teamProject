@@ -159,7 +159,7 @@ void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 
 	int requiredCoin = _pPlayer->state.roundCnt * 5;
 
-	if (timer == 0 || _pPlayer->state.coinCnt >= requiredCoin)
+	if (_pPlayer->state.roundCnt > 1 && timer == 0 || _pPlayer->state.roundCnt > 1 && _pPlayer->state.coinCnt >= requiredCoin)
 	{
 		_eCurScene = Scene::CLEAR;
 		_pPlayer->isClear = true;
@@ -410,6 +410,9 @@ void GameOverScene(Scene& _eCurScene, PPLAYER _pPlayer, int startTime, int survi
 {
 	_pPlayer->isGameOver = true;
 	Key eKey = KeyController();
+
+	if (_pPlayer->survivedTimeOnGameOver == -1)
+		_pPlayer->survivedTimeOnGameOver = time(0) - _pPlayer->startTime;
 
 	RenderGameOver(_pPlayer->survivedTimeOnGameOver);
 

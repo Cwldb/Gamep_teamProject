@@ -17,7 +17,7 @@ typedef struct _pos
 typedef struct _playerstate
 {
     int coinCnt;
-    int roundCnt = 0;
+    int roundCnt = 1;
 }PLAYERSTATE, * PPLAYERSTATE;
 
 typedef struct _playerpos
