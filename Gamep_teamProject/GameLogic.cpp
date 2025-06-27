@@ -8,6 +8,8 @@
 #include <io.h>
 #include <fcntl.h>
 #include<conio.h>
+#include <mutex>
+std::once_flag clearFlag;
 
 int g_ddongFrame = 0;
 
@@ -39,11 +41,9 @@ void PlayerInit(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	_pPlayer->state.roundCnt = roundBackup;
 
 	_pPlayer->survivedTimeOnGameOver = -1;
+
+	_pPlayer->startTime = time(0);
 }
-
-
-
-
 
 
 void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
@@ -155,11 +155,13 @@ void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 	COORD consoleSize = GetConsoleResolution();
 	int x = consoleSize.X / 2;
 	int y = 5;
-	int timer = _startTime - time(0);
 
-	int requiredCoin = _pPlayer->state.roundCnt * 5;
+	int timer = 60 - (time(0) - _startTime);
+	if (timer < 0) timer = 0;
 
-	if (_pPlayer->state.roundCnt >= 1 && _pPlayer->state.coinCnt >= requiredCoin)
+	int requiredCoin = _pPlayer->state.roundCnt + 1;
+
+	if (timer <= 0 || _pPlayer->state.coinCnt >= requiredCoin)
 	{
 		system("cls");
 		_eCurScene = Scene::CLEAR;
@@ -190,6 +192,8 @@ void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 	Gotoxy(x, y++);
 	cout << "--------------------";
 }
+
+
 
 
 void LoadStage(char _gameMap[MAP_HEIGHT][MAP_WIDTH], int round)
@@ -227,15 +231,20 @@ void GameScene(Scene& _eCurScene, char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER 
 	Gotoxy(0, 0);
 	Render(_gameMap, _pPlayer, _startTime, _eCurScene);
 	FrameSync(30);
-	if (_eCurScene == Scene::CLEAR)
-	{
-		ClearScene(_gameMap, _eCurScene, _pPlayer);
-	}
 
+	if (_eCurScene == Scene::CLEAR)
+		return;
 }
+
 
 void ClearScene(char _gameMap[MAP_HEIGHT][MAP_WIDTH], Scene& _eCurScene, PPLAYER _pPlayer)
 {
+	if (_pPlayer->isFirstEnter)
+	{
+		system("cls");
+		_pPlayer->isFirstEnter = false;
+	}
+
 	RenderClearScene(_pPlayer);
 	Key eKey = KeyController();
 
@@ -249,6 +258,7 @@ void ClearScene(char _gameMap[MAP_HEIGHT][MAP_WIDTH], Scene& _eCurScene, PPLAYER
 		PlayerInit(_gameMap, _pPlayer);
 
 		_eCurScene = Scene::GAME;
+		_pPlayer->isFirstEnter = true;
 		system("cls");
 	}
 }
