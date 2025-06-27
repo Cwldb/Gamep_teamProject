@@ -454,3 +454,8 @@ void RenderGameOver(int survivedTime)
 	Gotoxy(47, 22);
 	cout << "ESC를 눌러서 타이틀로 돌아가기";
 }
+
+void PlaySoundEffect(const wchar_t* fileName)
+{
+	PlaySound(fileName, NULL, SND_FILENAME | SND_ASYNC);
+}
