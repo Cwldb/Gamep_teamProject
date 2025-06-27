@@ -35,6 +35,7 @@ typedef struct _player
     bool isClear = false;
     int survivedTimeOnGameOver = -1;
     int startTime = 0;
+    bool isFirstEnter = true;
 }PLAYER, * PPLAYER;
 
 typedef struct _tagDDONG
