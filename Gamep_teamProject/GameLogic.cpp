@@ -159,10 +159,22 @@ void RenderUI(PPLAYER _pPlayer, int _startTime, Scene& _eCurScene)
 
 	int requiredCoin = _pPlayer->state.roundCnt * 5;
 
-	if (_pPlayer->state.roundCnt > 1 && timer == 0 || _pPlayer->state.roundCnt > 1 && _pPlayer->state.coinCnt >= requiredCoin)
+	if (_pPlayer->state.roundCnt >= 1 && _pPlayer->state.coinCnt >= requiredCoin)
 	{
+		system("cls");
 		_eCurScene = Scene::CLEAR;
 		_pPlayer->isClear = true;
+		return;
+	}
+
+	if (_pPlayer->state.roundCnt >= 1 && timer == 0)
+	{
+		system("cls");
+		_pPlayer->isGameOver = true;
+		_eCurScene = Scene::GAMEOVER;
+
+		if (_pPlayer->survivedTimeOnGameOver == -1)
+			_pPlayer->survivedTimeOnGameOver = time(0) - _pPlayer->startTime;
 		return;
 	}
 
@@ -369,7 +381,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 	}
 
 	static int coinFrame = 0;
-	if (++coinFrame >= 100)
+	if (++coinFrame >= 30)
 	{
 		coinFrame = 0;
 		SpawnTile(_gameMap, (char)Tile::COIN, 1);
