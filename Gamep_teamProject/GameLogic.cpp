@@ -14,8 +14,6 @@ int g_ddongFrame = 0;
 
 void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 {
-	
-	//PlaySoundID(SOUNDID::GAMESTART);
 	SetConsoleSettings(1000, 600, false, L"Catch Of Crush");
 	DisableConsoleResize();
 	SetCursorVisual(false, 50);
@@ -72,7 +70,6 @@ void HandleInput(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 	_pPlayer->position.tNewPos.x = std::clamp(_pPlayer->position.tNewPos.x, 0, MAP_WIDTH - 2);
 	_pPlayer->position.tNewPos.y = std::clamp(_pPlayer->position.tNewPos.y, 0, MAP_HEIGHT - 1);
 
-	// 최종 반영
 	if (_gameMap[_pPlayer->position.tNewPos.y][_pPlayer->position.tNewPos.x] != (char)Tile::WALL)
 		_pPlayer->position.tPos = _pPlayer->position.tNewPos;
 }
@@ -468,9 +465,4 @@ void RenderGameOver(int survivedTime)
 
 	Gotoxy(47, 22);
 	cout << "ESC를 눌러서 타이틀로 돌아가기";
-}
-
-void PlaySoundEffect(const wchar_t* fileName)
-{
-	PlaySound(fileName, NULL, SND_FILENAME | SND_ASYNC);
 }
