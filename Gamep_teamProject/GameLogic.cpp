@@ -14,7 +14,6 @@ int g_ddongFrame = 0;
 
 void Init(char _gameMap[MAP_HEIGHT][MAP_WIDTH], PPLAYER _pPlayer)
 {
-	
 	//PlaySoundID(SOUNDID::GAMESTART);
 	SetConsoleSettings(1000, 600, false, L"Catch Of Crush");
 	DisableConsoleResize();
@@ -299,7 +298,8 @@ void MoveTileDown(char _gameMap[MAP_HEIGHT][MAP_WIDTH], char tileType, char newT
 		{
 			if (_gameMap[i][j] == tileType)
 			{
-				char& below = _gameMap[i + 1][j];
+				char& below = _gameMap[i + 1][j]; //게임 맵과 같은 의미를 가지는 변수입니다.
+				//명확하고 보기좋게 쓸려고 만든거에요.
 
 				if (below == (char)Tile::BACK || below == (char)Tile::START)
 				{
