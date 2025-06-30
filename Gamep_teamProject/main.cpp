@@ -17,9 +17,10 @@ int main()
 
 	if (!InitAllSounds())
 	{
-		cout << "사운드 초기화 실패!";
-		//return;
+		cout << "사운드 실패";
 	}
+
+	PlaySoundID(SOUNDID::BGM, true);
 
 	Init(gameMap, &player);
 
