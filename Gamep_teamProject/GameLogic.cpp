@@ -389,6 +389,7 @@ void SpawnDDong(char _gameMap[MAP_HEIGHT][MAP_WIDTH], vector<DDONG>& vecDDONG, P
 		int dropCount = rand() % (2 + _pPlayer->state.roundCnt);
 		SpawnTile(_gameMap, (char)Tile::DDONG, dropCount);
 	}
+	//똥을 무작정 떨어트리지 않고 프레임을 조절하며 떨어트릴 수 있도록
 
 	static int coinFrame = 0;
 	if (++coinFrame >= 30)
