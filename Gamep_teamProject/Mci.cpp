@@ -82,11 +82,9 @@ bool InitAllSounds()
 
 void PlaySoundID(SOUNDID _id, bool _repeat)
 {
-	// 확인 후 처리
 	UINT devId = SoundTable[(int)_id].deviceId;
 	if (devId == 0)
 		return;
-	// 정상 재생
 	PlayMciDevice(devId, _repeat);
 }
 
