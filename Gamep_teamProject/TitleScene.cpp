@@ -106,26 +106,6 @@ void FlashAnimation(COORD _resolution, int _cnt, int _delaytime)
 		Sleep(_delaytime);
 		SetColor();
 		system("cls");
-		/*SetColor(COLOR::BLACK, COLOR::WHITE);
-		for (int i = 0; i < _resolution.Y; ++i)
-		{
-			for (int j = 0; j < _resolution.X / 2; ++j)
-			{
-				cout << "  ";
-			}
-			cout << endl;
-		}
-		Sleep(_delaytime);
-		Gotoxy(0, 0);
-		SetColor();
-		for (int i = 0; i < _resolution.Y; ++i)
-		{
-			for (int j = 0; j < _resolution.X / 2; ++j)
-			{
-				cout << "  ";
-			}
-			cout << endl;
-		}*/
 	}
 }
 
